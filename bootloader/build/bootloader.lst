@@ -1,0 +1,1320 @@
+ARM GAS  /tmp/ccxU4oI4.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 28, 1
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 1
+  10              		.eabi_attribute 34, 1
+  11              		.eabi_attribute 18, 4
+  12              		.file	"bootloader.c"
+  13              		.text
+  14              	.Ltext0:
+  15              		.cfi_sections	.debug_frame
+  16              		.section	.text.bootloaderInit,"ax",%progbits
+  17              		.align	1
+  18              		.global	bootloaderInit
+  19              		.arch armv7e-m
+  20              		.syntax unified
+  21              		.thumb
+  22              		.thumb_func
+  23              		.fpu fpv5-d16
+  25              	bootloaderInit:
+  26              	.LFB145:
+  27              		.file 1 "Core/boot_lib/bootloader.c"
+   1:Core/boot_lib/bootloader.c **** #include "bootloader.h"
+   2:Core/boot_lib/bootloader.c **** 
+   3:Core/boot_lib/bootloader.c **** 
+   4:Core/boot_lib/bootloader.c **** void bootloaderInit()
+   5:Core/boot_lib/bootloader.c **** {
+  28              		.loc 1 5 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32              		@ link register save eliminated.
+   6:Core/boot_lib/bootloader.c **** 	Flashed_offset = 0;
+  33              		.loc 1 6 2 view .LVU1
+  34              		.loc 1 6 17 is_stmt 0 view .LVU2
+  35 0000 0023     		movs	r3, #0
+  36 0002 024A     		ldr	r2, .L2
+  37 0004 1360     		str	r3, [r2]
+   7:Core/boot_lib/bootloader.c **** 	flashStatus = Unerased;
+  38              		.loc 1 7 2 is_stmt 1 view .LVU3
+  39              		.loc 1 7 14 is_stmt 0 view .LVU4
+  40 0006 024A     		ldr	r2, .L2+4
+  41 0008 1370     		strb	r3, [r2]
+   8:Core/boot_lib/bootloader.c **** 	BootloaderMode bootloaderMode;
+  42              		.loc 1 8 2 is_stmt 1 view .LVU5
+   9:Core/boot_lib/bootloader.c **** 
+  10:Core/boot_lib/bootloader.c ****   
+  11:Core/boot_lib/bootloader.c ****    /* if (HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) == GPIO_PIN_SET) //Enable flash mod
+  12:Core/boot_lib/bootloader.c ****     {
+  13:Core/boot_lib/bootloader.c ****         //do nothing and wait flash
+  14:Core/boot_lib/bootloader.c ****     }
+  15:Core/boot_lib/bootloader.c ****     else
+  16:Core/boot_lib/bootloader.c ****         checkAndJump();
+ARM GAS  /tmp/ccxU4oI4.s 			page 2
+
+
+  17:Core/boot_lib/bootloader.c **** */
+  18:Core/boot_lib/bootloader.c **** }
+  43              		.loc 1 18 1 is_stmt 0 view .LVU6
+  44 000a 7047     		bx	lr
+  45              	.L3:
+  46              		.align	2
+  47              	.L2:
+  48 000c 00000000 		.word	Flashed_offset
+  49 0010 00000000 		.word	flashStatus
+  50              		.cfi_endproc
+  51              	.LFE145:
+  53              		.section	.text.deinitEverything,"ax",%progbits
+  54              		.align	1
+  55              		.global	deinitEverything
+  56              		.syntax unified
+  57              		.thumb
+  58              		.thumb_func
+  59              		.fpu fpv5-d16
+  61              	deinitEverything:
+  62              	.LFB146:
+  19:Core/boot_lib/bootloader.c **** 
+  20:Core/boot_lib/bootloader.c **** 
+  21:Core/boot_lib/bootloader.c **** 
+  22:Core/boot_lib/bootloader.c **** void deinitEverything(void)
+  23:Core/boot_lib/bootloader.c **** {
+  63              		.loc 1 23 1 is_stmt 1 view -0
+  64              		.cfi_startproc
+  65              		@ args = 0, pretend = 0, frame = 0
+  66              		@ frame_needed = 0, uses_anonymous_args = 0
+  67 0000 10B5     		push	{r4, lr}
+  68              	.LCFI0:
+  69              		.cfi_def_cfa_offset 8
+  70              		.cfi_offset 4, -8
+  71              		.cfi_offset 14, -4
+  24:Core/boot_lib/bootloader.c ****     //-- reset peripherals to guarantee flawless start of user application
+  25:Core/boot_lib/bootloader.c **** 
+  26:Core/boot_lib/bootloader.c ****     //Mandatory for usb
+  27:Core/boot_lib/bootloader.c ****     HAL_GPIO_DeInit(LD1_GPIO_Port, LD1_Pin);
+  72              		.loc 1 27 5 view .LVU8
+  73 0002 1B4C     		ldr	r4, .L6
+  74 0004 0121     		movs	r1, #1
+  75 0006 2046     		mov	r0, r4
+  76 0008 FFF7FEFF 		bl	HAL_GPIO_DeInit
+  77              	.LVL0:
+  28:Core/boot_lib/bootloader.c ****     HAL_GPIO_DeInit(LD2_GPIO_Port, LD2_Pin);
+  78              		.loc 1 28 5 view .LVU9
+  79 000c 8021     		movs	r1, #128
+  80 000e 2046     		mov	r0, r4
+  81 0010 FFF7FEFF 		bl	HAL_GPIO_DeInit
+  82              	.LVL1:
+  29:Core/boot_lib/bootloader.c ****     HAL_GPIO_DeInit(LD3_GPIO_Port, LD3_Pin);
+  83              		.loc 1 29 5 view .LVU10
+  84 0014 4FF48041 		mov	r1, #16384
+  85 0018 2046     		mov	r0, r4
+  86 001a FFF7FEFF 		bl	HAL_GPIO_DeInit
+  87              	.LVL2:
+  30:Core/boot_lib/bootloader.c ****     HAL_GPIO_DeInit(USER_Btn_GPIO_Port, USER_Btn_Pin);
+ARM GAS  /tmp/ccxU4oI4.s 			page 3
+
+
+  88              		.loc 1 30 5 view .LVU11
+  89 001e 4FF40051 		mov	r1, #8192
+  90 0022 1448     		ldr	r0, .L6+4
+  91 0024 FFF7FEFF 		bl	HAL_GPIO_DeInit
+  92              	.LVL3:
+  31:Core/boot_lib/bootloader.c ****       __HAL_RCC_GPIOC_CLK_DISABLE();
+  93              		.loc 1 31 7 view .LVU12
+  94 0028 134B     		ldr	r3, .L6+8
+  95 002a 1A6B     		ldr	r2, [r3, #48]
+  96 002c 22F00402 		bic	r2, r2, #4
+  97 0030 1A63     		str	r2, [r3, #48]
+  32:Core/boot_lib/bootloader.c ****       __HAL_RCC_GPIOD_CLK_DISABLE();
+  98              		.loc 1 32 7 view .LVU13
+  99 0032 1A6B     		ldr	r2, [r3, #48]
+ 100 0034 22F00802 		bic	r2, r2, #8
+ 101 0038 1A63     		str	r2, [r3, #48]
+  33:Core/boot_lib/bootloader.c ****       __HAL_RCC_GPIOB_CLK_DISABLE();
+ 102              		.loc 1 33 7 view .LVU14
+ 103 003a 1A6B     		ldr	r2, [r3, #48]
+ 104 003c 22F00202 		bic	r2, r2, #2
+ 105 0040 1A63     		str	r2, [r3, #48]
+  34:Core/boot_lib/bootloader.c ****       __HAL_RCC_GPIOA_CLK_DISABLE();
+ 106              		.loc 1 34 7 view .LVU15
+ 107 0042 1A6B     		ldr	r2, [r3, #48]
+ 108 0044 22F00102 		bic	r2, r2, #1
+ 109 0048 1A63     		str	r2, [r3, #48]
+  35:Core/boot_lib/bootloader.c ****       __HAL_RCC_GPIOH_CLK_DISABLE();
+ 110              		.loc 1 35 7 view .LVU16
+ 111 004a 1A6B     		ldr	r2, [r3, #48]
+ 112 004c 22F08002 		bic	r2, r2, #128
+ 113 0050 1A63     		str	r2, [r3, #48]
+  36:Core/boot_lib/bootloader.c ****       __HAL_RCC_GPIOG_CLK_DISABLE();
+ 114              		.loc 1 36 7 view .LVU17
+ 115 0052 1A6B     		ldr	r2, [r3, #48]
+ 116 0054 22F04002 		bic	r2, r2, #64
+ 117 0058 1A63     		str	r2, [r3, #48]
+  37:Core/boot_lib/bootloader.c ****     HAL_RCC_DeInit();
+ 118              		.loc 1 37 5 view .LVU18
+ 119 005a FFF7FEFF 		bl	HAL_RCC_DeInit
+ 120              	.LVL4:
+  38:Core/boot_lib/bootloader.c ****     HAL_DeInit(); 
+ 121              		.loc 1 38 5 view .LVU19
+ 122 005e FFF7FEFF 		bl	HAL_DeInit
+ 123              	.LVL5:
+  39:Core/boot_lib/bootloader.c ****     SysTick->CTRL = 0;
+ 124              		.loc 1 39 5 view .LVU20
+ 125              		.loc 1 39 19 is_stmt 0 view .LVU21
+ 126 0062 064B     		ldr	r3, .L6+12
+ 127 0064 0022     		movs	r2, #0
+ 128 0066 1A60     		str	r2, [r3]
+  40:Core/boot_lib/bootloader.c ****     SysTick->LOAD = 0;
+ 129              		.loc 1 40 5 is_stmt 1 view .LVU22
+ 130              		.loc 1 40 19 is_stmt 0 view .LVU23
+ 131 0068 5A60     		str	r2, [r3, #4]
+  41:Core/boot_lib/bootloader.c ****     SysTick->VAL = 0;
+ 132              		.loc 1 41 5 is_stmt 1 view .LVU24
+ 133              		.loc 1 41 18 is_stmt 0 view .LVU25
+ARM GAS  /tmp/ccxU4oI4.s 			page 4
+
+
+ 134 006a 9A60     		str	r2, [r3, #8]
+  42:Core/boot_lib/bootloader.c **** }
+ 135              		.loc 1 42 1 view .LVU26
+ 136 006c 10BD     		pop	{r4, pc}
+ 137              	.L7:
+ 138 006e 00BF     		.align	2
+ 139              	.L6:
+ 140 0070 00040240 		.word	1073873920
+ 141 0074 00080240 		.word	1073874944
+ 142 0078 00380240 		.word	1073887232
+ 143 007c 10E000E0 		.word	-536813552
+ 144              		.cfi_endproc
+ 145              	.LFE146:
+ 147              		.section	.text.goToApp,"ax",%progbits
+ 148              		.align	1
+ 149              		.global	goToApp
+ 150              		.syntax unified
+ 151              		.thumb
+ 152              		.thumb_func
+ 153              		.fpu fpv5-d16
+ 155              	goToApp:
+ 156              	.LFB147:
+  43:Core/boot_lib/bootloader.c **** 
+  44:Core/boot_lib/bootloader.c **** void goToApp(void)
+  45:Core/boot_lib/bootloader.c **** {
+ 157              		.loc 1 45 1 is_stmt 1 view -0
+ 158              		.cfi_startproc
+ 159              		@ args = 0, pretend = 0, frame = 0
+ 160              		@ frame_needed = 0, uses_anonymous_args = 0
+ 161 0000 08B5     		push	{r3, lr}
+ 162              	.LCFI1:
+ 163              		.cfi_def_cfa_offset 8
+ 164              		.cfi_offset 3, -8
+ 165              		.cfi_offset 14, -4
+  46:Core/boot_lib/bootloader.c ****   uint32_t stack = *((uint32_t *) 0x8040000);
+ 166              		.loc 1 46 3 view .LVU28
+ 167              		.loc 1 46 12 is_stmt 0 view .LVU29
+ 168 0002 054B     		ldr	r3, .L10
+ 169 0004 1968     		ldr	r1, [r3]
+ 170              	.LVL6:
+  47:Core/boot_lib/bootloader.c ****   uint32_t prog = *((uint32_t *) 0x8040004);
+ 171              		.loc 1 47 3 is_stmt 1 view .LVU30
+ 172              		.loc 1 47 12 is_stmt 0 view .LVU31
+ 173 0006 054A     		ldr	r2, .L10+4
+ 174 0008 1268     		ldr	r2, [r2]
+ 175              	.LVL7:
+  48:Core/boot_lib/bootloader.c ****   void (*jump)(void);
+ 176              		.loc 1 48 3 is_stmt 1 view .LVU32
+  49:Core/boot_lib/bootloader.c ****   jump = prog;
+ 177              		.loc 1 49 3 view .LVU33
+  50:Core/boot_lib/bootloader.c ****   SCB->VTOR = (uint32_t)APP_ADDR;
+ 178              		.loc 1 50 3 view .LVU34
+ 179              		.loc 1 50 13 is_stmt 0 view .LVU35
+ 180 000a 0548     		ldr	r0, .L10+8
+ 181 000c 8360     		str	r3, [r0, #8]
+  51:Core/boot_lib/bootloader.c ****   __set_MSP (stack);
+ 182              		.loc 1 51 3 is_stmt 1 view .LVU36
+ARM GAS  /tmp/ccxU4oI4.s 			page 5
+
+
+ 183              	.LVL8:
+ 184              	.LBB4:
+ 185              	.LBI4:
+ 186              		.file 2 "Drivers/CMSIS/Include/cmsis_gcc.h"
+   1:Drivers/CMSIS/Include/cmsis_gcc.h **** /**************************************************************************//**
+   2:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @file     cmsis_gcc.h
+   3:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @brief    CMSIS compiler GCC header file
+   4:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @version  V5.0.4
+   5:Drivers/CMSIS/Include/cmsis_gcc.h ****  * @date     09. April 2018
+   6:Drivers/CMSIS/Include/cmsis_gcc.h ****  ******************************************************************************/
+   7:Drivers/CMSIS/Include/cmsis_gcc.h **** /*
+   8:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Copyright (c) 2009-2018 Arm Limited. All rights reserved.
+   9:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  10:Drivers/CMSIS/Include/cmsis_gcc.h ****  * SPDX-License-Identifier: Apache-2.0
+  11:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  12:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Licensed under the Apache License, Version 2.0 (the License); you may
+  13:Drivers/CMSIS/Include/cmsis_gcc.h ****  * not use this file except in compliance with the License.
+  14:Drivers/CMSIS/Include/cmsis_gcc.h ****  * You may obtain a copy of the License at
+  15:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  16:Drivers/CMSIS/Include/cmsis_gcc.h ****  * www.apache.org/licenses/LICENSE-2.0
+  17:Drivers/CMSIS/Include/cmsis_gcc.h ****  *
+  18:Drivers/CMSIS/Include/cmsis_gcc.h ****  * Unless required by applicable law or agreed to in writing, software
+  19:Drivers/CMSIS/Include/cmsis_gcc.h ****  * distributed under the License is distributed on an AS IS BASIS, WITHOUT
+  20:Drivers/CMSIS/Include/cmsis_gcc.h ****  * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  21:Drivers/CMSIS/Include/cmsis_gcc.h ****  * See the License for the specific language governing permissions and
+  22:Drivers/CMSIS/Include/cmsis_gcc.h ****  * limitations under the License.
+  23:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+  24:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  25:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __CMSIS_GCC_H
+  26:Drivers/CMSIS/Include/cmsis_gcc.h **** #define __CMSIS_GCC_H
+  27:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  28:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ignore some GCC warnings */
+  29:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic push
+  30:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wsign-conversion"
+  31:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wconversion"
+  32:Drivers/CMSIS/Include/cmsis_gcc.h **** #pragma GCC diagnostic ignored "-Wunused-parameter"
+  33:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  34:Drivers/CMSIS/Include/cmsis_gcc.h **** /* Fallback for __has_builtin */
+  35:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef __has_builtin
+  36:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __has_builtin(x) (0)
+  37:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  38:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+  39:Drivers/CMSIS/Include/cmsis_gcc.h **** /* CMSIS compiler specific defines */
+  40:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ASM
+  41:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ASM                                  __asm
+  42:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  43:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __INLINE
+  44:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __INLINE                               inline
+  45:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  46:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_INLINE
+  47:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_INLINE                        static inline
+  48:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  49:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __STATIC_FORCEINLINE                 
+  50:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __STATIC_FORCEINLINE                   __attribute__((always_inline)) static inline
+  51:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif                                           
+  52:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __NO_RETURN
+  53:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __NO_RETURN                            __attribute__((__noreturn__))
+ARM GAS  /tmp/ccxU4oI4.s 			page 6
+
+
+  54:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  55:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __USED
+  56:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __USED                                 __attribute__((used))
+  57:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  58:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __WEAK
+  59:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __WEAK                                 __attribute__((weak))
+  60:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  61:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED
+  62:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED                               __attribute__((packed, aligned(1)))
+  63:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  64:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_STRUCT
+  65:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_STRUCT                        struct __attribute__((packed, aligned(1)))
+  66:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  67:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __PACKED_UNION
+  68:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __PACKED_UNION                         union __attribute__((packed, aligned(1)))
+  69:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  70:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32        /* deprecated */
+  71:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  72:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  73:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  74:Drivers/CMSIS/Include/cmsis_gcc.h ****   struct __attribute__((packed)) T_UINT32 { uint32_t v; };
+  75:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  76:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32(x)                  (((struct T_UINT32 *)(x))->v)
+  77:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  78:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_WRITE
+  79:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  80:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  81:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  82:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_WRITE { uint16_t v; };
+  83:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  84:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_WRITE(addr, val)    (void)((((struct T_UINT16_WRITE *)(void *)(addr))-
+  85:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  86:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT16_READ
+  87:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  88:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  89:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  90:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT16_READ { uint16_t v; };
+  91:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+  92:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT16_READ(addr)          (((const struct T_UINT16_READ *)(const void *)(add
+  93:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+  94:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_WRITE
+  95:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+  96:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+  97:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+  98:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_WRITE { uint32_t v; };
+  99:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 100:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_WRITE(addr, val)    (void)((((struct T_UINT32_WRITE *)(void *)(addr))-
+ 101:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 102:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __UNALIGNED_UINT32_READ
+ 103:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic push
+ 104:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wpacked"
+ 105:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic ignored "-Wattributes"
+ 106:Drivers/CMSIS/Include/cmsis_gcc.h ****   __PACKED_STRUCT T_UINT32_READ { uint32_t v; };
+ 107:Drivers/CMSIS/Include/cmsis_gcc.h ****   #pragma GCC diagnostic pop
+ 108:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __UNALIGNED_UINT32_READ(addr)          (((const struct T_UINT32_READ *)(const void *)(add
+ 109:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 110:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __ALIGNED
+ARM GAS  /tmp/ccxU4oI4.s 			page 7
+
+
+ 111:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __ALIGNED(x)                           __attribute__((aligned(x)))
+ 112:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 113:Drivers/CMSIS/Include/cmsis_gcc.h **** #ifndef   __RESTRICT
+ 114:Drivers/CMSIS/Include/cmsis_gcc.h ****   #define __RESTRICT                             __restrict
+ 115:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 116:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 117:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 118:Drivers/CMSIS/Include/cmsis_gcc.h **** /* ###########################  Core Function Access  ########################### */
+ 119:Drivers/CMSIS/Include/cmsis_gcc.h **** /** \ingroup  CMSIS_Core_FunctionInterface
+ 120:Drivers/CMSIS/Include/cmsis_gcc.h ****     \defgroup CMSIS_Core_RegAccFunctions CMSIS Core Register Access Functions
+ 121:Drivers/CMSIS/Include/cmsis_gcc.h ****   @{
+ 122:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 123:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 124:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 125:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Enable IRQ Interrupts
+ 126:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Enables IRQ interrupts by clearing the I-bit in the CPSR.
+ 127:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 128:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 129:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __enable_irq(void)
+ 130:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 131:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsie i" : : : "memory");
+ 132:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 133:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 134:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 135:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 136:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Disable IRQ Interrupts
+ 137:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Disables IRQ interrupts by setting the I-bit in the CPSR.
+ 138:Drivers/CMSIS/Include/cmsis_gcc.h ****            Can only be executed in Privileged modes.
+ 139:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 140:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __disable_irq(void)
+ 141:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 142:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("cpsid i" : : : "memory");
+ 143:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 144:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 145:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 146:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 147:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Control Register
+ 148:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the Control Register.
+ 149:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               Control Register value
+ 150:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 151:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_CONTROL(void)
+ 152:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 153:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 154:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 155:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, control" : "=r" (result) );
+ 156:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 157:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 158:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 159:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 160:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 161:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 162:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Control Register (non-secure)
+ 163:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the non-secure Control Register when in secure mode.
+ 164:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               non-secure Control Register value
+ 165:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 166:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __TZ_get_CONTROL_NS(void)
+ 167:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ARM GAS  /tmp/ccxU4oI4.s 			page 8
+
+
+ 168:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 169:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 170:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, control_ns" : "=r" (result) );
+ 171:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 172:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 173:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 174:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 175:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 176:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 177:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Control Register
+ 178:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Writes the given value to the Control Register.
+ 179:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    control  Control Register value to set
+ 180:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 181:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __set_CONTROL(uint32_t control)
+ 182:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 183:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR control, %0" : : "r" (control) : "memory");
+ 184:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 185:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 186:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 187:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 188:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 189:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Control Register (non-secure)
+ 190:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Writes the given value to the non-secure Control Register when in secure state.
+ 191:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    control  Control Register value to set
+ 192:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 193:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __TZ_set_CONTROL_NS(uint32_t control)
+ 194:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 195:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR control_ns, %0" : : "r" (control) : "memory");
+ 196:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 197:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 198:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 199:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 200:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 201:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get IPSR Register
+ 202:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the IPSR Register.
+ 203:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               IPSR Register value
+ 204:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 205:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_IPSR(void)
+ 206:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 207:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 208:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 209:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, ipsr" : "=r" (result) );
+ 210:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 211:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 212:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 213:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 214:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 215:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get APSR Register
+ 216:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the APSR Register.
+ 217:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               APSR Register value
+ 218:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 219:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_APSR(void)
+ 220:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 221:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 222:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 223:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, apsr" : "=r" (result) );
+ 224:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ARM GAS  /tmp/ccxU4oI4.s 			page 9
+
+
+ 225:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 226:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 227:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 228:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 229:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get xPSR Register
+ 230:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the content of the xPSR Register.
+ 231:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               xPSR Register value
+ 232:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 233:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_xPSR(void)
+ 234:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 235:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 236:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 237:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, xpsr" : "=r" (result) );
+ 238:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 239:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 240:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 241:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 242:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 243:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Process Stack Pointer
+ 244:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the Process Stack Pointer (PSP).
+ 245:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               PSP Register value
+ 246:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 247:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_PSP(void)
+ 248:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 249:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 250:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 251:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, psp"  : "=r" (result) );
+ 252:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 253:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 254:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 255:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 256:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 257:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 258:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Process Stack Pointer (non-secure)
+ 259:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the non-secure Process Stack Pointer (PSP) when in secure s
+ 260:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               PSP Register value
+ 261:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 262:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __TZ_get_PSP_NS(void)
+ 263:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 264:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 265:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 266:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, psp_ns"  : "=r" (result) );
+ 267:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 268:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 269:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 270:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 271:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 272:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 273:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Process Stack Pointer
+ 274:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the Process Stack Pointer (PSP).
+ 275:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    topOfProcStack  Process Stack Pointer value to set
+ 276:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 277:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __set_PSP(uint32_t topOfProcStack)
+ 278:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 279:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR psp, %0" : : "r" (topOfProcStack) : );
+ 280:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 281:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ARM GAS  /tmp/ccxU4oI4.s 			page 10
+
+
+ 282:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 283:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 284:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 285:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Process Stack Pointer (non-secure)
+ 286:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the non-secure Process Stack Pointer (PSP) when in secure sta
+ 287:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    topOfProcStack  Process Stack Pointer value to set
+ 288:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 289:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __TZ_set_PSP_NS(uint32_t topOfProcStack)
+ 290:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 291:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR psp_ns, %0" : : "r" (topOfProcStack) : );
+ 292:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 293:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 294:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 295:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 296:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 297:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Main Stack Pointer
+ 298:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the Main Stack Pointer (MSP).
+ 299:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               MSP Register value
+ 300:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 301:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __get_MSP(void)
+ 302:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 303:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 304:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 305:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, msp" : "=r" (result) );
+ 306:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 307:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 308:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 309:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 310:Drivers/CMSIS/Include/cmsis_gcc.h **** #if (defined (__ARM_FEATURE_CMSE ) && (__ARM_FEATURE_CMSE == 3))
+ 311:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 312:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Get Main Stack Pointer (non-secure)
+ 313:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Returns the current value of the non-secure Main Stack Pointer (MSP) when in secure stat
+ 314:Drivers/CMSIS/Include/cmsis_gcc.h ****   \return               MSP Register value
+ 315:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 316:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE uint32_t __TZ_get_MSP_NS(void)
+ 317:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 318:Drivers/CMSIS/Include/cmsis_gcc.h ****   uint32_t result;
+ 319:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 320:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MRS %0, msp_ns" : "=r" (result) );
+ 321:Drivers/CMSIS/Include/cmsis_gcc.h ****   return(result);
+ 322:Drivers/CMSIS/Include/cmsis_gcc.h **** }
+ 323:Drivers/CMSIS/Include/cmsis_gcc.h **** #endif
+ 324:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 325:Drivers/CMSIS/Include/cmsis_gcc.h **** 
+ 326:Drivers/CMSIS/Include/cmsis_gcc.h **** /**
+ 327:Drivers/CMSIS/Include/cmsis_gcc.h ****   \brief   Set Main Stack Pointer
+ 328:Drivers/CMSIS/Include/cmsis_gcc.h ****   \details Assigns the given value to the Main Stack Pointer (MSP).
+ 329:Drivers/CMSIS/Include/cmsis_gcc.h ****   \param [in]    topOfMainStack  Main Stack Pointer value to set
+ 330:Drivers/CMSIS/Include/cmsis_gcc.h ****  */
+ 331:Drivers/CMSIS/Include/cmsis_gcc.h **** __STATIC_FORCEINLINE void __set_MSP(uint32_t topOfMainStack)
+ 187              		.loc 2 331 27 view .LVU37
+ 188              	.LBB5:
+ 332:Drivers/CMSIS/Include/cmsis_gcc.h **** {
+ 333:Drivers/CMSIS/Include/cmsis_gcc.h ****   __ASM volatile ("MSR msp, %0" : : "r" (topOfMainStack) : );
+ 189              		.loc 2 333 3 view .LVU38
+ 190              		.syntax unified
+ 191              	@ 333 "Drivers/CMSIS/Include/cmsis_gcc.h" 1
+ARM GAS  /tmp/ccxU4oI4.s 			page 11
+
+
+ 192 000e 81F30888 		MSR msp, r1
+ 193              	@ 0 "" 2
+ 194              	.LVL9:
+ 195              		.loc 2 333 3 is_stmt 0 view .LVU39
+ 196              		.thumb
+ 197              		.syntax unified
+ 198              	.LBE5:
+ 199              	.LBE4:
+  52:Core/boot_lib/bootloader.c ****   jump();
+ 200              		.loc 1 52 3 is_stmt 1 view .LVU40
+ 201 0012 9047     		blx	r2
+ 202              	.LVL10:
+  53:Core/boot_lib/bootloader.c **** 
+  54:Core/boot_lib/bootloader.c **** }
+ 203              		.loc 1 54 1 is_stmt 0 view .LVU41
+ 204 0014 08BD     		pop	{r3, pc}
+ 205              	.L11:
+ 206 0016 00BF     		.align	2
+ 207              	.L10:
+ 208 0018 00000408 		.word	134479872
+ 209 001c 04000408 		.word	134479876
+ 210 0020 00ED00E0 		.word	-536810240
+ 211              		.cfi_endproc
+ 212              	.LFE147:
+ 214              		.section	.text.readWord,"ax",%progbits
+ 215              		.align	1
+ 216              		.global	readWord
+ 217              		.syntax unified
+ 218              		.thumb
+ 219              		.thumb_func
+ 220              		.fpu fpv5-d16
+ 222              	readWord:
+ 223              	.LVL11:
+ 224              	.LFB149:
+  55:Core/boot_lib/bootloader.c **** 
+  56:Core/boot_lib/bootloader.c **** void checkAndJump(void)
+  57:Core/boot_lib/bootloader.c **** {
+  58:Core/boot_lib/bootloader.c ****     //check bin signature
+  59:Core/boot_lib/bootloader.c **** 		//little Check if the application is there
+  60:Core/boot_lib/bootloader.c **** 		uint8_t emptyCellCount = 0;
+  61:Core/boot_lib/bootloader.c **** 		for(uint8_t i=0; i<10; i++)
+  62:Core/boot_lib/bootloader.c **** 		{
+  63:Core/boot_lib/bootloader.c **** 			if(readWord(APP_ADDR + (i*4)) == -1)
+  64:Core/boot_lib/bootloader.c **** 				emptyCellCount++;
+  65:Core/boot_lib/bootloader.c **** 		}
+  66:Core/boot_lib/bootloader.c **** 		if(emptyCellCount != 10)
+  67:Core/boot_lib/bootloader.c **** 			goToApp();
+  68:Core/boot_lib/bootloader.c **** 		else
+  69:Core/boot_lib/bootloader.c **** 			errorBlink();
+  70:Core/boot_lib/bootloader.c **** 
+  71:Core/boot_lib/bootloader.c ****     //else do nothing
+  72:Core/boot_lib/bootloader.c **** }
+  73:Core/boot_lib/bootloader.c **** 
+  74:Core/boot_lib/bootloader.c **** uint32_t readWord(uint32_t address)
+  75:Core/boot_lib/bootloader.c **** {
+ 225              		.loc 1 75 1 is_stmt 1 view -0
+ 226              		.cfi_startproc
+ARM GAS  /tmp/ccxU4oI4.s 			page 12
+
+
+ 227              		@ args = 0, pretend = 0, frame = 0
+ 228              		@ frame_needed = 0, uses_anonymous_args = 0
+ 229              		@ link register save eliminated.
+  76:Core/boot_lib/bootloader.c **** 	uint32_t read_data;
+ 230              		.loc 1 76 2 view .LVU43
+  77:Core/boot_lib/bootloader.c **** 	read_data = *(uint32_t*)(address);
+ 231              		.loc 1 77 2 view .LVU44
+  78:Core/boot_lib/bootloader.c **** 	return read_data;
+ 232              		.loc 1 78 2 view .LVU45
+  79:Core/boot_lib/bootloader.c **** }
+ 233              		.loc 1 79 1 is_stmt 0 view .LVU46
+ 234 0000 0068     		ldr	r0, [r0]
+ 235              	.LVL12:
+ 236              		.loc 1 79 1 view .LVU47
+ 237 0002 7047     		bx	lr
+ 238              		.cfi_endproc
+ 239              	.LFE149:
+ 241              		.section	.text.checkAndJump,"ax",%progbits
+ 242              		.align	1
+ 243              		.global	checkAndJump
+ 244              		.syntax unified
+ 245              		.thumb
+ 246              		.thumb_func
+ 247              		.fpu fpv5-d16
+ 249              	checkAndJump:
+ 250              	.LFB148:
+  57:Core/boot_lib/bootloader.c ****     //check bin signature
+ 251              		.loc 1 57 1 is_stmt 1 view -0
+ 252              		.cfi_startproc
+ 253              		@ args = 0, pretend = 0, frame = 0
+ 254              		@ frame_needed = 0, uses_anonymous_args = 0
+ 255 0000 38B5     		push	{r3, r4, r5, lr}
+ 256              	.LCFI2:
+ 257              		.cfi_def_cfa_offset 16
+ 258              		.cfi_offset 3, -16
+ 259              		.cfi_offset 4, -12
+ 260              		.cfi_offset 5, -8
+ 261              		.cfi_offset 14, -4
+  60:Core/boot_lib/bootloader.c **** 		for(uint8_t i=0; i<10; i++)
+ 262              		.loc 1 60 3 view .LVU49
+ 263              	.LVL13:
+  61:Core/boot_lib/bootloader.c **** 		{
+ 264              		.loc 1 61 3 view .LVU50
+ 265              	.LBB6:
+  61:Core/boot_lib/bootloader.c **** 		{
+ 266              		.loc 1 61 7 view .LVU51
+  61:Core/boot_lib/bootloader.c **** 		{
+ 267              		.loc 1 61 15 is_stmt 0 view .LVU52
+ 268 0002 0024     		movs	r4, #0
+ 269              	.LBE6:
+  60:Core/boot_lib/bootloader.c **** 		for(uint8_t i=0; i<10; i++)
+ 270              		.loc 1 60 11 view .LVU53
+ 271 0004 2546     		mov	r5, r4
+ 272              	.LBB7:
+  61:Core/boot_lib/bootloader.c **** 		{
+ 273              		.loc 1 61 3 view .LVU54
+ 274 0006 01E0     		b	.L14
+ARM GAS  /tmp/ccxU4oI4.s 			page 13
+
+
+ 275              	.LVL14:
+ 276              	.L15:
+  61:Core/boot_lib/bootloader.c **** 		{
+ 277              		.loc 1 61 26 is_stmt 1 discriminator 2 view .LVU55
+  61:Core/boot_lib/bootloader.c **** 		{
+ 278              		.loc 1 61 27 is_stmt 0 discriminator 2 view .LVU56
+ 279 0008 0134     		adds	r4, r4, #1
+ 280              	.LVL15:
+  61:Core/boot_lib/bootloader.c **** 		{
+ 281              		.loc 1 61 27 discriminator 2 view .LVU57
+ 282 000a E4B2     		uxtb	r4, r4
+ 283              	.LVL16:
+ 284              	.L14:
+  61:Core/boot_lib/bootloader.c **** 		{
+ 285              		.loc 1 61 20 is_stmt 1 discriminator 1 view .LVU58
+  61:Core/boot_lib/bootloader.c **** 		{
+ 286              		.loc 1 61 3 is_stmt 0 discriminator 1 view .LVU59
+ 287 000c 092C     		cmp	r4, #9
+ 288 000e 0AD8     		bhi	.L20
+  63:Core/boot_lib/bootloader.c **** 				emptyCellCount++;
+ 289              		.loc 1 63 4 is_stmt 1 view .LVU60
+  63:Core/boot_lib/bootloader.c **** 				emptyCellCount++;
+ 290              		.loc 1 63 25 is_stmt 0 view .LVU61
+ 291 0010 0948     		ldr	r0, .L21
+ 292 0012 2044     		add	r0, r0, r4
+  63:Core/boot_lib/bootloader.c **** 				emptyCellCount++;
+ 293              		.loc 1 63 7 view .LVU62
+ 294 0014 8000     		lsls	r0, r0, #2
+ 295 0016 FFF7FEFF 		bl	readWord
+ 296              	.LVL17:
+  63:Core/boot_lib/bootloader.c **** 				emptyCellCount++;
+ 297              		.loc 1 63 6 view .LVU63
+ 298 001a B0F1FF3F 		cmp	r0, #-1
+ 299 001e F3D1     		bne	.L15
+  64:Core/boot_lib/bootloader.c **** 		}
+ 300              		.loc 1 64 5 is_stmt 1 view .LVU64
+  64:Core/boot_lib/bootloader.c **** 		}
+ 301              		.loc 1 64 19 is_stmt 0 view .LVU65
+ 302 0020 0135     		adds	r5, r5, #1
+ 303              	.LVL18:
+  64:Core/boot_lib/bootloader.c **** 		}
+ 304              		.loc 1 64 19 view .LVU66
+ 305 0022 EDB2     		uxtb	r5, r5
+ 306              	.LVL19:
+  64:Core/boot_lib/bootloader.c **** 		}
+ 307              		.loc 1 64 19 view .LVU67
+ 308 0024 F0E7     		b	.L15
+ 309              	.L20:
+  64:Core/boot_lib/bootloader.c **** 		}
+ 310              		.loc 1 64 19 view .LVU68
+ 311              	.LBE7:
+  66:Core/boot_lib/bootloader.c **** 			goToApp();
+ 312              		.loc 1 66 3 is_stmt 1 view .LVU69
+  66:Core/boot_lib/bootloader.c **** 			goToApp();
+ 313              		.loc 1 66 5 is_stmt 0 view .LVU70
+ 314 0026 0A2D     		cmp	r5, #10
+ 315 0028 02D0     		beq	.L17
+ARM GAS  /tmp/ccxU4oI4.s 			page 14
+
+
+  67:Core/boot_lib/bootloader.c **** 		else
+ 316              		.loc 1 67 4 is_stmt 1 view .LVU71
+ 317 002a FFF7FEFF 		bl	goToApp
+ 318              	.LVL20:
+ 319              	.L13:
+  72:Core/boot_lib/bootloader.c **** 
+ 320              		.loc 1 72 1 is_stmt 0 view .LVU72
+ 321 002e 38BD     		pop	{r3, r4, r5, pc}
+ 322              	.LVL21:
+ 323              	.L17:
+ 324              	.LBB8:
+  69:Core/boot_lib/bootloader.c **** 
+ 325              		.loc 1 69 4 is_stmt 1 view .LVU73
+ 326 0030 FFF7FEFF 		bl	errorBlink
+ 327              	.LVL22:
+ 328              	.LBE8:
+  72:Core/boot_lib/bootloader.c **** 
+ 329              		.loc 1 72 1 is_stmt 0 view .LVU74
+ 330 0034 FBE7     		b	.L13
+ 331              	.L22:
+ 332 0036 00BF     		.align	2
+ 333              	.L21:
+ 334 0038 00000102 		.word	33619968
+ 335              		.cfi_endproc
+ 336              	.LFE148:
+ 338              		.section	.rodata.flashWord.str1.4,"aMS",%progbits,1
+ 339              		.align	2
+ 340              	.LC0:
+ 341 0000 4572726F 		.ascii	"Error: Memory not unlocked nor erased!\012\000"
+ 341      723A204D 
+ 341      656D6F72 
+ 341      79206E6F 
+ 341      7420756E 
+ 342              		.section	.text.flashWord,"ax",%progbits
+ 343              		.align	1
+ 344              		.global	flashWord
+ 345              		.syntax unified
+ 346              		.thumb
+ 347              		.thumb_func
+ 348              		.fpu fpv5-d16
+ 350              	flashWord:
+ 351              	.LVL23:
+ 352              	.LFB150:
+  80:Core/boot_lib/bootloader.c **** 
+  81:Core/boot_lib/bootloader.c **** void flashWord(uint32_t dataToFlash)
+  82:Core/boot_lib/bootloader.c **** {
+ 353              		.loc 1 82 1 is_stmt 1 view -0
+ 354              		.cfi_startproc
+ 355              		@ args = 0, pretend = 0, frame = 8
+ 356              		@ frame_needed = 0, uses_anonymous_args = 0
+ 357              		.loc 1 82 1 is_stmt 0 view .LVU76
+ 358 0000 70B5     		push	{r4, r5, r6, lr}
+ 359              	.LCFI3:
+ 360              		.cfi_def_cfa_offset 16
+ 361              		.cfi_offset 4, -16
+ 362              		.cfi_offset 5, -12
+ 363              		.cfi_offset 6, -8
+ARM GAS  /tmp/ccxU4oI4.s 			page 15
+
+
+ 364              		.cfi_offset 14, -4
+ 365 0002 82B0     		sub	sp, sp, #8
+ 366              	.LCFI4:
+ 367              		.cfi_def_cfa_offset 24
+  83:Core/boot_lib/bootloader.c **** 	if(flashStatus == Unlocked)
+ 368              		.loc 1 83 2 is_stmt 1 view .LVU77
+ 369              		.loc 1 83 17 is_stmt 0 view .LVU78
+ 370 0004 154B     		ldr	r3, .L29
+ 371 0006 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+ 372              		.loc 1 83 4 view .LVU79
+ 373 0008 022B     		cmp	r3, #2
+ 374 000a 21D1     		bne	.L24
+ 375 000c 0646     		mov	r6, r0
+ 376              	.LBB9:
+  84:Core/boot_lib/bootloader.c **** 	{
+  85:Core/boot_lib/bootloader.c **** 	  volatile HAL_StatusTypeDef status;
+  86:Core/boot_lib/bootloader.c **** 	  uint8_t flash_attempt = 0;
+ 377              		.loc 1 86 12 view .LVU80
+ 378 000e 0024     		movs	r4, #0
+ 379              	.LVL24:
+ 380              	.L26:
+  87:Core/boot_lib/bootloader.c **** 	  uint32_t address;
+ 381              		.loc 1 87 4 is_stmt 1 discriminator 3 view .LVU81
+  88:Core/boot_lib/bootloader.c **** 	  do
+ 382              		.loc 1 88 4 discriminator 3 view .LVU82
+  89:Core/boot_lib/bootloader.c **** 	  {
+  90:Core/boot_lib/bootloader.c **** 		  address = APP_ADDR + Flashed_offset;
+ 383              		.loc 1 90 5 discriminator 3 view .LVU83
+ 384              		.loc 1 90 24 is_stmt 0 discriminator 3 view .LVU84
+ 385 0010 134B     		ldr	r3, .L29+4
+ 386 0012 1B68     		ldr	r3, [r3]
+ 387              		.loc 1 90 13 discriminator 3 view .LVU85
+ 388 0014 134D     		ldr	r5, .L29+8
+ 389 0016 1D44     		add	r5, r5, r3
+ 390              	.LVL25:
+  91:Core/boot_lib/bootloader.c **** 		  status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, address, dataToFlash);
+ 391              		.loc 1 91 5 is_stmt 1 discriminator 3 view .LVU86
+ 392              		.loc 1 91 14 is_stmt 0 discriminator 3 view .LVU87
+ 393 0018 3246     		mov	r2, r6
+ 394 001a 0023     		movs	r3, #0
+ 395 001c 2946     		mov	r1, r5
+ 396 001e 0220     		movs	r0, #2
+ 397 0020 FFF7FEFF 		bl	HAL_FLASH_Program
+ 398              	.LVL26:
+ 399              		.loc 1 91 12 discriminator 3 view .LVU88
+ 400 0024 8DF80700 		strb	r0, [sp, #7]
+  92:Core/boot_lib/bootloader.c **** 		  flash_attempt++;
+ 401              		.loc 1 92 5 is_stmt 1 discriminator 3 view .LVU89
+ 402              		.loc 1 92 18 is_stmt 0 discriminator 3 view .LVU90
+ 403 0028 0134     		adds	r4, r4, #1
+ 404              	.LVL27:
+ 405              		.loc 1 92 18 discriminator 3 view .LVU91
+ 406 002a E4B2     		uxtb	r4, r4
+ 407              	.LVL28:
+  93:Core/boot_lib/bootloader.c **** 	  }while(status != HAL_OK && flash_attempt < 10 && dataToFlash == readWord(address));
+ 408              		.loc 1 93 10 is_stmt 1 discriminator 3 view .LVU92
+ 409              		.loc 1 93 18 is_stmt 0 discriminator 3 view .LVU93
+ARM GAS  /tmp/ccxU4oI4.s 			page 16
+
+
+ 410 002c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 411              		.loc 1 93 4 discriminator 3 view .LVU94
+ 412 0030 33B1     		cbz	r3, .L25
+ 413              		.loc 1 93 28 discriminator 1 view .LVU95
+ 414 0032 092C     		cmp	r4, #9
+ 415 0034 04D8     		bhi	.L25
+ 416              		.loc 1 93 68 discriminator 2 view .LVU96
+ 417 0036 2846     		mov	r0, r5
+ 418 0038 FFF7FEFF 		bl	readWord
+ 419              	.LVL29:
+ 420              		.loc 1 93 50 discriminator 2 view .LVU97
+ 421 003c B042     		cmp	r0, r6
+ 422 003e E7D0     		beq	.L26
+ 423              	.L25:
+  94:Core/boot_lib/bootloader.c **** 	  if(status != HAL_OK)
+ 424              		.loc 1 94 4 is_stmt 1 view .LVU98
+ 425              		.loc 1 94 14 is_stmt 0 view .LVU99
+ 426 0040 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 427              		.loc 1 94 6 view .LVU100
+ 428 0044 43B9     		cbnz	r3, .L23
+  95:Core/boot_lib/bootloader.c **** 	  {
+  96:Core/boot_lib/bootloader.c **** 		  //CDC_Transmit_FS((uint8_t*)&"Flashing Error!\n", strlen("Flashing Error!\n"));
+  97:Core/boot_lib/bootloader.c **** 	  }else
+  98:Core/boot_lib/bootloader.c **** 	  {//Word Flash Successful
+  99:Core/boot_lib/bootloader.c **** 		  Flashed_offset += 4;
+ 429              		.loc 1 99 5 is_stmt 1 view .LVU101
+ 430              		.loc 1 99 20 is_stmt 0 view .LVU102
+ 431 0046 064A     		ldr	r2, .L29+4
+ 432 0048 1368     		ldr	r3, [r2]
+ 433 004a 0433     		adds	r3, r3, #4
+ 434 004c 1360     		str	r3, [r2]
+ 435 004e 03E0     		b	.L23
+ 436              	.LVL30:
+ 437              	.L24:
+ 438              		.loc 1 99 20 view .LVU103
+ 439              	.LBE9:
+ 100:Core/boot_lib/bootloader.c **** 		  //CDC_Transmit_FS((uint8_t*)&"Flash: OK\n", strlen("Flash: OK\n"));
+ 101:Core/boot_lib/bootloader.c **** 	  }
+ 102:Core/boot_lib/bootloader.c **** 	}else
+ 103:Core/boot_lib/bootloader.c **** 	{
+ 104:Core/boot_lib/bootloader.c **** 	  CDC_Transmit_FS((uint8_t*)&"Error: Memory not unlocked nor erased!\n",
+ 440              		.loc 1 104 4 is_stmt 1 view .LVU104
+ 441 0050 2721     		movs	r1, #39
+ 442 0052 0548     		ldr	r0, .L29+12
+ 443              	.LVL31:
+ 444              		.loc 1 104 4 is_stmt 0 view .LVU105
+ 445 0054 FFF7FEFF 		bl	CDC_Transmit_FS
+ 446              	.LVL32:
+ 447              	.L23:
+ 105:Core/boot_lib/bootloader.c **** 			  strlen("Error: Memory not unlocked nor erased!\n"));
+ 106:Core/boot_lib/bootloader.c **** 	}
+ 107:Core/boot_lib/bootloader.c **** }
+ 448              		.loc 1 107 1 view .LVU106
+ 449 0058 02B0     		add	sp, sp, #8
+ 450              	.LCFI5:
+ 451              		.cfi_def_cfa_offset 16
+ 452              		@ sp needed
+ARM GAS  /tmp/ccxU4oI4.s 			page 17
+
+
+ 453 005a 70BD     		pop	{r4, r5, r6, pc}
+ 454              	.L30:
+ 455              		.align	2
+ 456              	.L29:
+ 457 005c 00000000 		.word	flashStatus
+ 458 0060 00000000 		.word	Flashed_offset
+ 459 0064 00000408 		.word	134479872
+ 460 0068 00000000 		.word	.LC0
+ 461              		.cfi_endproc
+ 462              	.LFE150:
+ 464              		.section	.text.eraseMemory,"ax",%progbits
+ 465              		.align	1
+ 466              		.global	eraseMemory
+ 467              		.syntax unified
+ 468              		.thumb
+ 469              		.thumb_func
+ 470              		.fpu fpv5-d16
+ 472              	eraseMemory:
+ 473              	.LFB151:
+ 108:Core/boot_lib/bootloader.c **** 
+ 109:Core/boot_lib/bootloader.c **** void eraseMemory()
+ 110:Core/boot_lib/bootloader.c **** {
+ 474              		.loc 1 110 1 is_stmt 1 view -0
+ 475              		.cfi_startproc
+ 476              		@ args = 0, pretend = 0, frame = 32
+ 477              		@ frame_needed = 0, uses_anonymous_args = 0
+ 478 0000 70B5     		push	{r4, r5, r6, lr}
+ 479              	.LCFI6:
+ 480              		.cfi_def_cfa_offset 16
+ 481              		.cfi_offset 4, -16
+ 482              		.cfi_offset 5, -12
+ 483              		.cfi_offset 6, -8
+ 484              		.cfi_offset 14, -4
+ 485 0002 88B0     		sub	sp, sp, #32
+ 486              	.LCFI7:
+ 487              		.cfi_def_cfa_offset 48
+ 111:Core/boot_lib/bootloader.c **** 
+ 112:Core/boot_lib/bootloader.c ****     HAL_FLASH_Unlock();
+ 488              		.loc 1 112 5 view .LVU108
+ 489 0004 FFF7FEFF 		bl	HAL_FLASH_Unlock
+ 490              	.LVL33:
+ 113:Core/boot_lib/bootloader.c ****     FLASH_EraseInitTypeDef EraseInitStruct;
+ 491              		.loc 1 113 5 view .LVU109
+ 114:Core/boot_lib/bootloader.c ****     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+ 492              		.loc 1 114 5 view .LVU110
+ 493              		.loc 1 114 31 is_stmt 0 view .LVU111
+ 494 0008 0025     		movs	r5, #0
+ 495 000a 0395     		str	r5, [sp, #12]
+ 115:Core/boot_lib/bootloader.c **** 
+ 116:Core/boot_lib/bootloader.c **** //#ifdef USE_F767ZI
+ 117:Core/boot_lib/bootloader.c ****     EraseInitStruct.Sector = APP_ADDR;
+ 496              		.loc 1 117 5 is_stmt 1 view .LVU112
+ 497              		.loc 1 117 28 is_stmt 0 view .LVU113
+ 498 000c 3B4B     		ldr	r3, .L35
+ 499 000e 0593     		str	r3, [sp, #20]
+ 118:Core/boot_lib/bootloader.c ****     EraseInitStruct.NbSectors = 1; //to check
+ 500              		.loc 1 118 5 is_stmt 1 view .LVU114
+ARM GAS  /tmp/ccxU4oI4.s 			page 18
+
+
+ 501              		.loc 1 118 31 is_stmt 0 view .LVU115
+ 502 0010 0126     		movs	r6, #1
+ 503 0012 0696     		str	r6, [sp, #24]
+ 119:Core/boot_lib/bootloader.c **** /*#else
+ 120:Core/boot_lib/bootloader.c ****     EraseInitStruct.PageAddress = APP_ADDR;
+ 121:Core/boot_lib/bootloader.c ****     EraseInitStruct.NbPages = 1; //to check
+ 122:Core/boot_lib/bootloader.c **** #endif
+ 123:Core/boot_lib/bootloader.c **** */
+ 124:Core/boot_lib/bootloader.c ****     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+ 504              		.loc 1 124 5 is_stmt 1 view .LVU116
+ 505 0014 3A4C     		ldr	r4, .L35+4
+ 506 0016 3246     		mov	r2, r6
+ 507 0018 8021     		movs	r1, #128
+ 508 001a 2046     		mov	r0, r4
+ 509 001c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 510              	.LVL34:
+ 125:Core/boot_lib/bootloader.c ****     HAL_Delay(50);
+ 511              		.loc 1 125 5 view .LVU117
+ 512 0020 3220     		movs	r0, #50
+ 513 0022 FFF7FEFF 		bl	HAL_Delay
+ 514              	.LVL35:
+ 126:Core/boot_lib/bootloader.c ****     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+ 515              		.loc 1 126 5 view .LVU118
+ 516 0026 2A46     		mov	r2, r5
+ 517 0028 8021     		movs	r1, #128
+ 518 002a 2046     		mov	r0, r4
+ 519 002c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 520              	.LVL36:
+ 127:Core/boot_lib/bootloader.c ****     HAL_Delay(50);
+ 521              		.loc 1 127 5 view .LVU119
+ 522 0030 3220     		movs	r0, #50
+ 523 0032 FFF7FEFF 		bl	HAL_Delay
+ 524              	.LVL37:
+ 128:Core/boot_lib/bootloader.c ****     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+ 525              		.loc 1 128 5 view .LVU120
+ 526 0036 3246     		mov	r2, r6
+ 527 0038 8021     		movs	r1, #128
+ 528 003a 2046     		mov	r0, r4
+ 529 003c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 530              	.LVL38:
+ 129:Core/boot_lib/bootloader.c ****     HAL_Delay(50);
+ 531              		.loc 1 129 5 view .LVU121
+ 532 0040 3220     		movs	r0, #50
+ 533 0042 FFF7FEFF 		bl	HAL_Delay
+ 534              	.LVL39:
+ 130:Core/boot_lib/bootloader.c ****     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+ 535              		.loc 1 130 5 view .LVU122
+ 536 0046 2A46     		mov	r2, r5
+ 537 0048 8021     		movs	r1, #128
+ 538 004a 2046     		mov	r0, r4
+ 539 004c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 540              	.LVL40:
+ 131:Core/boot_lib/bootloader.c **** 
+ 132:Core/boot_lib/bootloader.c ****     uint32_t PageError;
+ 541              		.loc 1 132 5 view .LVU123
+ 133:Core/boot_lib/bootloader.c ****     volatile HAL_StatusTypeDef status_erase, status_write;
+ 542              		.loc 1 133 5 view .LVU124
+ARM GAS  /tmp/ccxU4oI4.s 			page 19
+
+
+ 134:Core/boot_lib/bootloader.c ****     status_erase = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
+ 543              		.loc 1 134 5 view .LVU125
+ 544              		.loc 1 134 20 is_stmt 0 view .LVU126
+ 545 0050 02A9     		add	r1, sp, #8
+ 546 0052 03A8     		add	r0, sp, #12
+ 547 0054 FFF7FEFF 		bl	HAL_FLASHEx_Erase
+ 548              	.LVL41:
+ 549              		.loc 1 134 18 view .LVU127
+ 550 0058 8DF80700 		strb	r0, [sp, #7]
+ 135:Core/boot_lib/bootloader.c ****     if (status_erase != HAL_OK) //blink red bad
+ 551              		.loc 1 135 5 is_stmt 1 view .LVU128
+ 552              		.loc 1 135 22 is_stmt 0 view .LVU129
+ 553 005c 9DF80730 		ldrb	r3, [sp, #7]	@ zero_extendqisi2
+ 554              		.loc 1 135 8 view .LVU130
+ 555 0060 63B3     		cbz	r3, .L32
+ 556              	.LBB10:
+ 136:Core/boot_lib/bootloader.c ****     {
+ 137:Core/boot_lib/bootloader.c ****         uint32_t error = (FLASH->SR & FLASH_FLAG_ALL_ERRORS);
+ 557              		.loc 1 137 9 is_stmt 1 view .LVU131
+ 558              		.loc 1 137 32 is_stmt 0 view .LVU132
+ 559 0062 284B     		ldr	r3, .L35+8
+ 560 0064 DB68     		ldr	r3, [r3, #12]
+ 138:Core/boot_lib/bootloader.c ****         //printf("Write failed: %x \r\n", error);
+ 139:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
+ 561              		.loc 1 139 9 is_stmt 1 view .LVU133
+ 562 0066 3246     		mov	r2, r6
+ 563 0068 4FF48041 		mov	r1, #16384
+ 564 006c 2046     		mov	r0, r4
+ 565 006e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 566              	.LVL42:
+ 140:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 567              		.loc 1 140 9 view .LVU134
+ 568 0072 3220     		movs	r0, #50
+ 569 0074 FFF7FEFF 		bl	HAL_Delay
+ 570              	.LVL43:
+ 141:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+ 571              		.loc 1 141 9 view .LVU135
+ 572 0078 2A46     		mov	r2, r5
+ 573 007a 4FF48041 		mov	r1, #16384
+ 574 007e 2046     		mov	r0, r4
+ 575 0080 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 576              	.LVL44:
+ 142:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 577              		.loc 1 142 9 view .LVU136
+ 578 0084 3220     		movs	r0, #50
+ 579 0086 FFF7FEFF 		bl	HAL_Delay
+ 580              	.LVL45:
+ 143:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_SET);
+ 581              		.loc 1 143 9 view .LVU137
+ 582 008a 3246     		mov	r2, r6
+ 583 008c 4FF48041 		mov	r1, #16384
+ 584 0090 2046     		mov	r0, r4
+ 585 0092 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 586              	.LVL46:
+ 144:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 587              		.loc 1 144 9 view .LVU138
+ 588 0096 3220     		movs	r0, #50
+ARM GAS  /tmp/ccxU4oI4.s 			page 20
+
+
+ 589 0098 FFF7FEFF 		bl	HAL_Delay
+ 590              	.LVL47:
+ 145:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD3_GPIO_Port, LD3_Pin, GPIO_PIN_RESET);
+ 591              		.loc 1 145 9 view .LVU139
+ 592 009c 2A46     		mov	r2, r5
+ 593 009e 4FF48041 		mov	r1, #16384
+ 594 00a2 2046     		mov	r0, r4
+ 595 00a4 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 596              	.LVL48:
+ 597              	.L33:
+ 598              	.LBE10:
+ 146:Core/boot_lib/bootloader.c ****     }
+ 147:Core/boot_lib/bootloader.c ****     else //blink Green good
+ 148:Core/boot_lib/bootloader.c ****     {
+ 149:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET);
+ 150:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 151:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
+ 152:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 153:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET);
+ 154:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 155:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
+ 156:Core/boot_lib/bootloader.c ****     }
+ 157:Core/boot_lib/bootloader.c **** 
+ 158:Core/boot_lib/bootloader.c **** 
+ 159:Core/boot_lib/bootloader.c ****     HAL_FLASH_Lock();
+ 599              		.loc 1 159 5 view .LVU140
+ 600 00a8 FFF7FEFF 		bl	HAL_FLASH_Lock
+ 601              	.LVL49:
+ 160:Core/boot_lib/bootloader.c **** 
+ 161:Core/boot_lib/bootloader.c ****     flashStatus = Erased;
+ 602              		.loc 1 161 5 view .LVU141
+ 603              		.loc 1 161 17 is_stmt 0 view .LVU142
+ 604 00ac 164B     		ldr	r3, .L35+12
+ 605 00ae 0122     		movs	r2, #1
+ 606 00b0 1A70     		strb	r2, [r3]
+ 162:Core/boot_lib/bootloader.c **** 	Flashed_offset = 0;
+ 607              		.loc 1 162 2 is_stmt 1 view .LVU143
+ 608              		.loc 1 162 17 is_stmt 0 view .LVU144
+ 609 00b2 164B     		ldr	r3, .L35+16
+ 610 00b4 0022     		movs	r2, #0
+ 611 00b6 1A60     		str	r2, [r3]
+ 163:Core/boot_lib/bootloader.c **** }
+ 612              		.loc 1 163 1 view .LVU145
+ 613 00b8 08B0     		add	sp, sp, #32
+ 614              	.LCFI8:
+ 615              		.cfi_remember_state
+ 616              		.cfi_def_cfa_offset 16
+ 617              		@ sp needed
+ 618 00ba 70BD     		pop	{r4, r5, r6, pc}
+ 619              	.L32:
+ 620              	.LCFI9:
+ 621              		.cfi_restore_state
+ 149:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 622              		.loc 1 149 9 is_stmt 1 view .LVU146
+ 623 00bc 104C     		ldr	r4, .L35+4
+ 624 00be 0122     		movs	r2, #1
+ 625 00c0 1146     		mov	r1, r2
+ARM GAS  /tmp/ccxU4oI4.s 			page 21
+
+
+ 626 00c2 2046     		mov	r0, r4
+ 627 00c4 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 628              	.LVL50:
+ 150:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
+ 629              		.loc 1 150 9 view .LVU147
+ 630 00c8 3220     		movs	r0, #50
+ 631 00ca FFF7FEFF 		bl	HAL_Delay
+ 632              	.LVL51:
+ 151:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 633              		.loc 1 151 9 view .LVU148
+ 634 00ce 0022     		movs	r2, #0
+ 635 00d0 0121     		movs	r1, #1
+ 636 00d2 2046     		mov	r0, r4
+ 637 00d4 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 638              	.LVL52:
+ 152:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_SET);
+ 639              		.loc 1 152 9 view .LVU149
+ 640 00d8 3220     		movs	r0, #50
+ 641 00da FFF7FEFF 		bl	HAL_Delay
+ 642              	.LVL53:
+ 153:Core/boot_lib/bootloader.c ****         HAL_Delay(50);
+ 643              		.loc 1 153 9 view .LVU150
+ 644 00de 0122     		movs	r2, #1
+ 645 00e0 1146     		mov	r1, r2
+ 646 00e2 2046     		mov	r0, r4
+ 647 00e4 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 648              	.LVL54:
+ 154:Core/boot_lib/bootloader.c ****         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
+ 649              		.loc 1 154 9 view .LVU151
+ 650 00e8 3220     		movs	r0, #50
+ 651 00ea FFF7FEFF 		bl	HAL_Delay
+ 652              	.LVL55:
+ 155:Core/boot_lib/bootloader.c ****     }
+ 653              		.loc 1 155 9 view .LVU152
+ 654 00ee 0022     		movs	r2, #0
+ 655 00f0 0121     		movs	r1, #1
+ 656 00f2 2046     		mov	r0, r4
+ 657 00f4 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 658              	.LVL56:
+ 659 00f8 D6E7     		b	.L33
+ 660              	.L36:
+ 661 00fa 00BF     		.align	2
+ 662              	.L35:
+ 663 00fc 00000408 		.word	134479872
+ 664 0100 00040240 		.word	1073873920
+ 665 0104 003C0240 		.word	1073888256
+ 666 0108 00000000 		.word	flashStatus
+ 667 010c 00000000 		.word	Flashed_offset
+ 668              		.cfi_endproc
+ 669              	.LFE151:
+ 671              		.comm	flashStatus,1,1
+ 672              		.comm	Flashed_offset,4,4
+ 673              		.text
+ 674              	.Letext0:
+ 675              		.file 3 "/usr/lib/gcc/arm-none-eabi/9.2.1/include/stdint.h"
+ 676              		.file 4 "Drivers/CMSIS/Include/core_cm7.h"
+ 677              		.file 5 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/system_stm32f7xx.h"
+ARM GAS  /tmp/ccxU4oI4.s 			page 22
+
+
+ 678              		.file 6 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f767xx.h"
+ 679              		.file 7 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_def.h"
+ 680              		.file 8 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_gpio.h"
+ 681              		.file 9 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash_ex.h"
+ 682              		.file 10 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h"
+ 683              		.file 11 "/usr/lib/gcc/arm-none-eabi/9.2.1/include/stddef.h"
+ 684              		.file 12 "/usr/include/newlib/sys/_types.h"
+ 685              		.file 13 "/usr/include/newlib/sys/reent.h"
+ 686              		.file 14 "/usr/include/newlib/sys/lock.h"
+ 687              		.file 15 "/usr/include/newlib/stdlib.h"
+ 688              		.file 16 "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h"
+ 689              		.file 17 "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h"
+ 690              		.file 18 "USB_DEVICE/App/usbd_cdc_if.h"
+ 691              		.file 19 "Core/boot_lib/bootloader.h"
+ 692              		.file 20 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_flash.h"
+ 693              		.file 21 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h"
+ARM GAS  /tmp/ccxU4oI4.s 			page 23
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 bootloader.c
+     /tmp/ccxU4oI4.s:17     .text.bootloaderInit:0000000000000000 $t
+     /tmp/ccxU4oI4.s:25     .text.bootloaderInit:0000000000000000 bootloaderInit
+     /tmp/ccxU4oI4.s:48     .text.bootloaderInit:000000000000000c $d
+                            *COM*:0000000000000004 Flashed_offset
+                            *COM*:0000000000000001 flashStatus
+     /tmp/ccxU4oI4.s:54     .text.deinitEverything:0000000000000000 $t
+     /tmp/ccxU4oI4.s:61     .text.deinitEverything:0000000000000000 deinitEverything
+     /tmp/ccxU4oI4.s:140    .text.deinitEverything:0000000000000070 $d
+     /tmp/ccxU4oI4.s:148    .text.goToApp:0000000000000000 $t
+     /tmp/ccxU4oI4.s:155    .text.goToApp:0000000000000000 goToApp
+     /tmp/ccxU4oI4.s:208    .text.goToApp:0000000000000018 $d
+     /tmp/ccxU4oI4.s:215    .text.readWord:0000000000000000 $t
+     /tmp/ccxU4oI4.s:222    .text.readWord:0000000000000000 readWord
+     /tmp/ccxU4oI4.s:242    .text.checkAndJump:0000000000000000 $t
+     /tmp/ccxU4oI4.s:249    .text.checkAndJump:0000000000000000 checkAndJump
+     /tmp/ccxU4oI4.s:334    .text.checkAndJump:0000000000000038 $d
+     /tmp/ccxU4oI4.s:339    .rodata.flashWord.str1.4:0000000000000000 $d
+     /tmp/ccxU4oI4.s:343    .text.flashWord:0000000000000000 $t
+     /tmp/ccxU4oI4.s:350    .text.flashWord:0000000000000000 flashWord
+     /tmp/ccxU4oI4.s:457    .text.flashWord:000000000000005c $d
+     /tmp/ccxU4oI4.s:465    .text.eraseMemory:0000000000000000 $t
+     /tmp/ccxU4oI4.s:472    .text.eraseMemory:0000000000000000 eraseMemory
+     /tmp/ccxU4oI4.s:663    .text.eraseMemory:00000000000000fc $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_DeInit
+HAL_RCC_DeInit
+HAL_DeInit
+errorBlink
+HAL_FLASH_Program
+CDC_Transmit_FS
+HAL_FLASH_Unlock
+HAL_GPIO_WritePin
+HAL_Delay
+HAL_FLASHEx_Erase
+HAL_FLASH_Lock

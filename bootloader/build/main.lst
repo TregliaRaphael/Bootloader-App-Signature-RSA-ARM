@@ -1,0 +1,1153 @@
+ARM GAS  /tmp/ccPOahi6.s 			page 1
+
+
+   1              		.cpu cortex-m7
+   2              		.eabi_attribute 28, 1
+   3              		.eabi_attribute 20, 1
+   4              		.eabi_attribute 21, 1
+   5              		.eabi_attribute 23, 3
+   6              		.eabi_attribute 24, 1
+   7              		.eabi_attribute 25, 1
+   8              		.eabi_attribute 26, 1
+   9              		.eabi_attribute 30, 1
+  10              		.eabi_attribute 34, 1
+  11              		.eabi_attribute 18, 4
+  12              		.file	"main.c"
+  13              		.text
+  14              	.Ltext0:
+  15              		.cfi_sections	.debug_frame
+  16              		.section	.text.MX_GPIO_Init,"ax",%progbits
+  17              		.align	1
+  18              		.arch armv7e-m
+  19              		.syntax unified
+  20              		.thumb
+  21              		.thumb_func
+  22              		.fpu fpv5-d16
+  24              	MX_GPIO_Init:
+  25              	.LFB148:
+  26              		.file 1 "Core/Src/main.c"
+   1:Core/Src/main.c **** /* USER CODE BEGIN Header */
+   2:Core/Src/main.c **** /**
+   3:Core/Src/main.c ****   ******************************************************************************
+   4:Core/Src/main.c ****   * @file           : main.c
+   5:Core/Src/main.c ****   * @brief          : Main program body
+   6:Core/Src/main.c ****   ******************************************************************************
+   7:Core/Src/main.c ****   * @attention
+   8:Core/Src/main.c ****   *
+   9:Core/Src/main.c ****   * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  10:Core/Src/main.c ****   * All rights reserved.</center></h2>
+  11:Core/Src/main.c ****   *
+  12:Core/Src/main.c ****   * This software component is licensed by ST under Ultimate Liberty license
+  13:Core/Src/main.c ****   * SLA0044, the "License"; You may not use this file except in compliance with
+  14:Core/Src/main.c ****   * the License. You may obtain a copy of the License at:
+  15:Core/Src/main.c ****   *                             www.st.com/SLA0044
+  16:Core/Src/main.c ****   *
+  17:Core/Src/main.c ****   ******************************************************************************
+  18:Core/Src/main.c ****   */
+  19:Core/Src/main.c **** /* USER CODE END Header */
+  20:Core/Src/main.c **** /* Includes ------------------------------------------------------------------*/
+  21:Core/Src/main.c **** #include "main.h"
+  22:Core/Src/main.c **** #include "usb_device.h"
+  23:Core/Src/main.c **** 
+  24:Core/Src/main.c **** /* Private includes ----------------------------------------------------------*/
+  25:Core/Src/main.c **** /* USER CODE BEGIN Includes */
+  26:Core/Src/main.c **** #include "bootloader.h"
+  27:Core/Src/main.c **** /* USER CODE END Includes */
+  28:Core/Src/main.c **** 
+  29:Core/Src/main.c **** /* Private typedef -----------------------------------------------------------*/
+  30:Core/Src/main.c **** /* USER CODE BEGIN PTD */
+  31:Core/Src/main.c **** 
+  32:Core/Src/main.c **** /* USER CODE END PTD */
+ARM GAS  /tmp/ccPOahi6.s 			page 2
+
+
+  33:Core/Src/main.c **** 
+  34:Core/Src/main.c **** /* Private define ------------------------------------------------------------*/
+  35:Core/Src/main.c **** /* USER CODE BEGIN PD */
+  36:Core/Src/main.c **** /* USER CODE END PD */
+  37:Core/Src/main.c **** 
+  38:Core/Src/main.c **** /* Private macro -------------------------------------------------------------*/
+  39:Core/Src/main.c **** /* USER CODE BEGIN PM */
+  40:Core/Src/main.c **** 
+  41:Core/Src/main.c **** /* USER CODE END PM */
+  42:Core/Src/main.c **** 
+  43:Core/Src/main.c **** /* Private variables ---------------------------------------------------------*/
+  44:Core/Src/main.c **** 
+  45:Core/Src/main.c **** UART_HandleTypeDef huart3;
+  46:Core/Src/main.c **** 
+  47:Core/Src/main.c **** /* USER CODE BEGIN PV */
+  48:Core/Src/main.c **** 
+  49:Core/Src/main.c **** /* USER CODE END PV */
+  50:Core/Src/main.c **** 
+  51:Core/Src/main.c **** /* Private function prototypes -----------------------------------------------*/
+  52:Core/Src/main.c **** void SystemClock_Config(void);
+  53:Core/Src/main.c **** static void MX_GPIO_Init(void);
+  54:Core/Src/main.c **** static void MX_USART3_UART_Init(void);
+  55:Core/Src/main.c **** /* USER CODE BEGIN PFP */
+  56:Core/Src/main.c **** 
+  57:Core/Src/main.c **** /* USER CODE END PFP */
+  58:Core/Src/main.c **** 
+  59:Core/Src/main.c **** /* Private user code ---------------------------------------------------------*/
+  60:Core/Src/main.c **** /* USER CODE BEGIN 0 */
+  61:Core/Src/main.c **** 
+  62:Core/Src/main.c **** /* USER CODE END 0 */
+  63:Core/Src/main.c **** 
+  64:Core/Src/main.c **** /**
+  65:Core/Src/main.c ****   * @brief  The application entry point.
+  66:Core/Src/main.c ****   * @retval int
+  67:Core/Src/main.c ****   */
+  68:Core/Src/main.c **** int main(void)
+  69:Core/Src/main.c **** {
+  70:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+  71:Core/Src/main.c **** 
+  72:Core/Src/main.c ****   /* USER CODE END 1 */
+  73:Core/Src/main.c **** 
+  74:Core/Src/main.c ****   /* MCU Configuration--------------------------------------------------------*/
+  75:Core/Src/main.c **** 
+  76:Core/Src/main.c ****   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  77:Core/Src/main.c ****   HAL_Init();
+  78:Core/Src/main.c **** 
+  79:Core/Src/main.c ****   /* USER CODE BEGIN Init */
+  80:Core/Src/main.c **** 
+  81:Core/Src/main.c ****   /* USER CODE END Init */
+  82:Core/Src/main.c **** 
+  83:Core/Src/main.c ****   /* Configure the system clock */
+  84:Core/Src/main.c ****   SystemClock_Config();
+  85:Core/Src/main.c **** 
+  86:Core/Src/main.c ****   /* USER CODE BEGIN SysInit */
+  87:Core/Src/main.c **** 
+  88:Core/Src/main.c ****   /* USER CODE END SysInit */
+  89:Core/Src/main.c **** 
+ARM GAS  /tmp/ccPOahi6.s 			page 3
+
+
+  90:Core/Src/main.c ****   /* Initialize all configured peripherals */
+  91:Core/Src/main.c ****   MX_GPIO_Init();
+  92:Core/Src/main.c ****   MX_USART3_UART_Init();
+  93:Core/Src/main.c ****   MX_USB_DEVICE_Init();
+  94:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+  95:Core/Src/main.c **** //if (HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) == GPIO_PIN_SET) 
+  96:Core/Src/main.c ****    // eraseMemory(); 
+  97:Core/Src/main.c ****    deinitEverything(); 
+  98:Core/Src/main.c ****    goToApp();
+  99:Core/Src/main.c ****   /* USER CODE END 2 */
+ 100:Core/Src/main.c **** 
+ 101:Core/Src/main.c ****   /* Infinite loop */
+ 102:Core/Src/main.c ****   /* USER CODE BEGIN WHILE */
+ 103:Core/Src/main.c ****   while (1)
+ 104:Core/Src/main.c ****   {
+ 105:Core/Src/main.c ****     /* USER CODE END WHILE */
+ 106:Core/Src/main.c **** 
+ 107:Core/Src/main.c ****     /* USER CODE BEGIN 3 */
+ 108:Core/Src/main.c ****   }
+ 109:Core/Src/main.c ****   /* USER CODE END 3 */
+ 110:Core/Src/main.c **** }
+ 111:Core/Src/main.c **** 
+ 112:Core/Src/main.c **** /**
+ 113:Core/Src/main.c ****   * @brief System Clock Configuration
+ 114:Core/Src/main.c ****   * @retval None
+ 115:Core/Src/main.c ****   */
+ 116:Core/Src/main.c **** void SystemClock_Config(void)
+ 117:Core/Src/main.c **** {
+ 118:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 119:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 120:Core/Src/main.c ****   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+ 121:Core/Src/main.c **** 
+ 122:Core/Src/main.c ****   /** Configure LSE Drive Capability
+ 123:Core/Src/main.c ****   */
+ 124:Core/Src/main.c ****   HAL_PWR_EnableBkUpAccess();
+ 125:Core/Src/main.c ****   /** Configure the main internal regulator output voltage
+ 126:Core/Src/main.c ****   */
+ 127:Core/Src/main.c ****   __HAL_RCC_PWR_CLK_ENABLE();
+ 128:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 129:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 130:Core/Src/main.c ****   * in the RCC_OscInitTypeDef structure.
+ 131:Core/Src/main.c ****   */
+ 132:Core/Src/main.c ****   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+ 133:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+ 134:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 135:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 136:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLM = 4;
+ 137:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLN = 216;
+ 138:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+ 139:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLQ = 9;
+ 140:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 141:Core/Src/main.c ****   {
+ 142:Core/Src/main.c ****     Error_Handler();
+ 143:Core/Src/main.c ****   }
+ 144:Core/Src/main.c ****   /** Activate the Over-Drive mode
+ 145:Core/Src/main.c ****   */
+ 146:Core/Src/main.c ****   if (HAL_PWREx_EnableOverDrive() != HAL_OK)
+ARM GAS  /tmp/ccPOahi6.s 			page 4
+
+
+ 147:Core/Src/main.c ****   {
+ 148:Core/Src/main.c ****     Error_Handler();
+ 149:Core/Src/main.c ****   }
+ 150:Core/Src/main.c ****   /** Initializes the CPU, AHB and APB buses clocks
+ 151:Core/Src/main.c ****   */
+ 152:Core/Src/main.c ****   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+ 153:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 154:Core/Src/main.c ****   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+ 155:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 156:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+ 157:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+ 158:Core/Src/main.c **** 
+ 159:Core/Src/main.c ****   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
+ 160:Core/Src/main.c ****   {
+ 161:Core/Src/main.c ****     Error_Handler();
+ 162:Core/Src/main.c ****   }
+ 163:Core/Src/main.c ****   PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3|RCC_PERIPHCLK_CLK48;
+ 164:Core/Src/main.c ****   PeriphClkInitStruct.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
+ 165:Core/Src/main.c ****   PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48SOURCE_PLL;
+ 166:Core/Src/main.c ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+ 167:Core/Src/main.c ****   {
+ 168:Core/Src/main.c ****     Error_Handler();
+ 169:Core/Src/main.c ****   }
+ 170:Core/Src/main.c **** }
+ 171:Core/Src/main.c **** 
+ 172:Core/Src/main.c **** /**
+ 173:Core/Src/main.c ****   * @brief USART3 Initialization Function
+ 174:Core/Src/main.c ****   * @param None
+ 175:Core/Src/main.c ****   * @retval None
+ 176:Core/Src/main.c ****   */
+ 177:Core/Src/main.c **** static void MX_USART3_UART_Init(void)
+ 178:Core/Src/main.c **** {
+ 179:Core/Src/main.c **** 
+ 180:Core/Src/main.c ****   /* USER CODE BEGIN USART3_Init 0 */
+ 181:Core/Src/main.c **** 
+ 182:Core/Src/main.c ****   /* USER CODE END USART3_Init 0 */
+ 183:Core/Src/main.c **** 
+ 184:Core/Src/main.c ****   /* USER CODE BEGIN USART3_Init 1 */
+ 185:Core/Src/main.c **** 
+ 186:Core/Src/main.c ****   /* USER CODE END USART3_Init 1 */
+ 187:Core/Src/main.c ****   huart3.Instance = USART3;
+ 188:Core/Src/main.c ****   huart3.Init.BaudRate = 115200;
+ 189:Core/Src/main.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
+ 190:Core/Src/main.c ****   huart3.Init.StopBits = UART_STOPBITS_1;
+ 191:Core/Src/main.c ****   huart3.Init.Parity = UART_PARITY_NONE;
+ 192:Core/Src/main.c ****   huart3.Init.Mode = UART_MODE_TX_RX;
+ 193:Core/Src/main.c ****   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 194:Core/Src/main.c ****   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+ 195:Core/Src/main.c ****   huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+ 196:Core/Src/main.c ****   huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 197:Core/Src/main.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
+ 198:Core/Src/main.c ****   {
+ 199:Core/Src/main.c ****     Error_Handler();
+ 200:Core/Src/main.c ****   }
+ 201:Core/Src/main.c ****   /* USER CODE BEGIN USART3_Init 2 */
+ 202:Core/Src/main.c **** 
+ 203:Core/Src/main.c ****   /* USER CODE END USART3_Init 2 */
+ARM GAS  /tmp/ccPOahi6.s 			page 5
+
+
+ 204:Core/Src/main.c **** 
+ 205:Core/Src/main.c **** }
+ 206:Core/Src/main.c **** 
+ 207:Core/Src/main.c **** /**
+ 208:Core/Src/main.c ****   * @brief GPIO Initialization Function
+ 209:Core/Src/main.c ****   * @param None
+ 210:Core/Src/main.c ****   * @retval None
+ 211:Core/Src/main.c ****   */
+ 212:Core/Src/main.c **** static void MX_GPIO_Init(void)
+ 213:Core/Src/main.c **** {
+  27              		.loc 1 213 1 view -0
+  28              		.cfi_startproc
+  29              		@ args = 0, pretend = 0, frame = 48
+  30              		@ frame_needed = 0, uses_anonymous_args = 0
+  31 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+  32              	.LCFI0:
+  33              		.cfi_def_cfa_offset 36
+  34              		.cfi_offset 4, -36
+  35              		.cfi_offset 5, -32
+  36              		.cfi_offset 6, -28
+  37              		.cfi_offset 7, -24
+  38              		.cfi_offset 8, -20
+  39              		.cfi_offset 9, -16
+  40              		.cfi_offset 10, -12
+  41              		.cfi_offset 11, -8
+  42              		.cfi_offset 14, -4
+  43 0004 8DB0     		sub	sp, sp, #52
+  44              	.LCFI1:
+  45              		.cfi_def_cfa_offset 88
+ 214:Core/Src/main.c ****   GPIO_InitTypeDef GPIO_InitStruct = {0};
+  46              		.loc 1 214 3 view .LVU1
+  47              		.loc 1 214 20 is_stmt 0 view .LVU2
+  48 0006 0024     		movs	r4, #0
+  49 0008 0794     		str	r4, [sp, #28]
+  50 000a 0894     		str	r4, [sp, #32]
+  51 000c 0994     		str	r4, [sp, #36]
+  52 000e 0A94     		str	r4, [sp, #40]
+  53 0010 0B94     		str	r4, [sp, #44]
+ 215:Core/Src/main.c **** 
+ 216:Core/Src/main.c ****   /* GPIO Ports Clock Enable */
+ 217:Core/Src/main.c ****   __HAL_RCC_GPIOC_CLK_ENABLE();
+  54              		.loc 1 217 3 is_stmt 1 view .LVU3
+  55              	.LBB2:
+  56              		.loc 1 217 3 view .LVU4
+  57              		.loc 1 217 3 view .LVU5
+  58 0012 524B     		ldr	r3, .L3
+  59 0014 1A6B     		ldr	r2, [r3, #48]
+  60 0016 42F00402 		orr	r2, r2, #4
+  61 001a 1A63     		str	r2, [r3, #48]
+  62              		.loc 1 217 3 view .LVU6
+  63 001c 1A6B     		ldr	r2, [r3, #48]
+  64 001e 02F00402 		and	r2, r2, #4
+  65 0022 0192     		str	r2, [sp, #4]
+  66              		.loc 1 217 3 view .LVU7
+  67 0024 019A     		ldr	r2, [sp, #4]
+  68              	.LBE2:
+  69              		.loc 1 217 3 view .LVU8
+ARM GAS  /tmp/ccPOahi6.s 			page 6
+
+
+ 218:Core/Src/main.c ****   __HAL_RCC_GPIOH_CLK_ENABLE();
+  70              		.loc 1 218 3 view .LVU9
+  71              	.LBB3:
+  72              		.loc 1 218 3 view .LVU10
+  73              		.loc 1 218 3 view .LVU11
+  74 0026 1A6B     		ldr	r2, [r3, #48]
+  75 0028 42F08002 		orr	r2, r2, #128
+  76 002c 1A63     		str	r2, [r3, #48]
+  77              		.loc 1 218 3 view .LVU12
+  78 002e 1A6B     		ldr	r2, [r3, #48]
+  79 0030 02F08002 		and	r2, r2, #128
+  80 0034 0292     		str	r2, [sp, #8]
+  81              		.loc 1 218 3 view .LVU13
+  82 0036 029A     		ldr	r2, [sp, #8]
+  83              	.LBE3:
+  84              		.loc 1 218 3 view .LVU14
+ 219:Core/Src/main.c ****   __HAL_RCC_GPIOA_CLK_ENABLE();
+  85              		.loc 1 219 3 view .LVU15
+  86              	.LBB4:
+  87              		.loc 1 219 3 view .LVU16
+  88              		.loc 1 219 3 view .LVU17
+  89 0038 1A6B     		ldr	r2, [r3, #48]
+  90 003a 42F00102 		orr	r2, r2, #1
+  91 003e 1A63     		str	r2, [r3, #48]
+  92              		.loc 1 219 3 view .LVU18
+  93 0040 1A6B     		ldr	r2, [r3, #48]
+  94 0042 02F00102 		and	r2, r2, #1
+  95 0046 0392     		str	r2, [sp, #12]
+  96              		.loc 1 219 3 view .LVU19
+  97 0048 039A     		ldr	r2, [sp, #12]
+  98              	.LBE4:
+  99              		.loc 1 219 3 view .LVU20
+ 220:Core/Src/main.c ****   __HAL_RCC_GPIOB_CLK_ENABLE();
+ 100              		.loc 1 220 3 view .LVU21
+ 101              	.LBB5:
+ 102              		.loc 1 220 3 view .LVU22
+ 103              		.loc 1 220 3 view .LVU23
+ 104 004a 1A6B     		ldr	r2, [r3, #48]
+ 105 004c 42F00202 		orr	r2, r2, #2
+ 106 0050 1A63     		str	r2, [r3, #48]
+ 107              		.loc 1 220 3 view .LVU24
+ 108 0052 1A6B     		ldr	r2, [r3, #48]
+ 109 0054 02F00202 		and	r2, r2, #2
+ 110 0058 0492     		str	r2, [sp, #16]
+ 111              		.loc 1 220 3 view .LVU25
+ 112 005a 049A     		ldr	r2, [sp, #16]
+ 113              	.LBE5:
+ 114              		.loc 1 220 3 view .LVU26
+ 221:Core/Src/main.c ****   __HAL_RCC_GPIOD_CLK_ENABLE();
+ 115              		.loc 1 221 3 view .LVU27
+ 116              	.LBB6:
+ 117              		.loc 1 221 3 view .LVU28
+ 118              		.loc 1 221 3 view .LVU29
+ 119 005c 1A6B     		ldr	r2, [r3, #48]
+ 120 005e 42F00802 		orr	r2, r2, #8
+ 121 0062 1A63     		str	r2, [r3, #48]
+ 122              		.loc 1 221 3 view .LVU30
+ARM GAS  /tmp/ccPOahi6.s 			page 7
+
+
+ 123 0064 1A6B     		ldr	r2, [r3, #48]
+ 124 0066 02F00802 		and	r2, r2, #8
+ 125 006a 0592     		str	r2, [sp, #20]
+ 126              		.loc 1 221 3 view .LVU31
+ 127 006c 059A     		ldr	r2, [sp, #20]
+ 128              	.LBE6:
+ 129              		.loc 1 221 3 view .LVU32
+ 222:Core/Src/main.c ****   __HAL_RCC_GPIOG_CLK_ENABLE();
+ 130              		.loc 1 222 3 view .LVU33
+ 131              	.LBB7:
+ 132              		.loc 1 222 3 view .LVU34
+ 133              		.loc 1 222 3 view .LVU35
+ 134 006e 1A6B     		ldr	r2, [r3, #48]
+ 135 0070 42F04002 		orr	r2, r2, #64
+ 136 0074 1A63     		str	r2, [r3, #48]
+ 137              		.loc 1 222 3 view .LVU36
+ 138 0076 1B6B     		ldr	r3, [r3, #48]
+ 139 0078 03F04003 		and	r3, r3, #64
+ 140 007c 0693     		str	r3, [sp, #24]
+ 141              		.loc 1 222 3 view .LVU37
+ 142 007e 069B     		ldr	r3, [sp, #24]
+ 143              	.LBE7:
+ 144              		.loc 1 222 3 view .LVU38
+ 223:Core/Src/main.c **** 
+ 224:Core/Src/main.c ****   /*Configure GPIO pin Output Level */
+ 225:Core/Src/main.c ****   HAL_GPIO_WritePin(GPIOB, LD1_Pin|LD3_Pin|LD2_Pin, GPIO_PIN_RESET);
+ 145              		.loc 1 225 3 view .LVU39
+ 146 0080 DFF8E890 		ldr	r9, .L3+16
+ 147 0084 2246     		mov	r2, r4
+ 148 0086 44F28101 		movw	r1, #16513
+ 149 008a 4846     		mov	r0, r9
+ 150 008c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 151              	.LVL0:
+ 226:Core/Src/main.c **** 
+ 227:Core/Src/main.c ****   /*Configure GPIO pin Output Level */
+ 228:Core/Src/main.c ****   HAL_GPIO_WritePin(USB_PowerSwitchOn_GPIO_Port, USB_PowerSwitchOn_Pin, GPIO_PIN_RESET);
+ 152              		.loc 1 228 3 view .LVU40
+ 153 0090 334D     		ldr	r5, .L3+4
+ 154 0092 2246     		mov	r2, r4
+ 155 0094 4021     		movs	r1, #64
+ 156 0096 2846     		mov	r0, r5
+ 157 0098 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 158              	.LVL1:
+ 229:Core/Src/main.c **** 
+ 230:Core/Src/main.c ****   /*Configure GPIO pin : USER_Btn_Pin */
+ 231:Core/Src/main.c ****   GPIO_InitStruct.Pin = USER_Btn_Pin;
+ 159              		.loc 1 231 3 view .LVU41
+ 160              		.loc 1 231 23 is_stmt 0 view .LVU42
+ 161 009c 4FF4005B 		mov	fp, #8192
+ 162 00a0 CDF81CB0 		str	fp, [sp, #28]
+ 232:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+ 163              		.loc 1 232 3 is_stmt 1 view .LVU43
+ 164              		.loc 1 232 24 is_stmt 0 view .LVU44
+ 165 00a4 2F4B     		ldr	r3, .L3+8
+ 166 00a6 0893     		str	r3, [sp, #32]
+ 233:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 167              		.loc 1 233 3 is_stmt 1 view .LVU45
+ARM GAS  /tmp/ccPOahi6.s 			page 8
+
+
+ 168              		.loc 1 233 24 is_stmt 0 view .LVU46
+ 169 00a8 0994     		str	r4, [sp, #36]
+ 234:Core/Src/main.c ****   HAL_GPIO_Init(USER_Btn_GPIO_Port, &GPIO_InitStruct);
+ 170              		.loc 1 234 3 is_stmt 1 view .LVU47
+ 171 00aa DFF8C4A0 		ldr	r10, .L3+20
+ 172 00ae 07A9     		add	r1, sp, #28
+ 173 00b0 5046     		mov	r0, r10
+ 174 00b2 FFF7FEFF 		bl	HAL_GPIO_Init
+ 175              	.LVL2:
+ 235:Core/Src/main.c **** 
+ 236:Core/Src/main.c ****   /*Configure GPIO pins : RMII_MDC_Pin RMII_RXD0_Pin RMII_RXD1_Pin */
+ 237:Core/Src/main.c ****   GPIO_InitStruct.Pin = RMII_MDC_Pin|RMII_RXD0_Pin|RMII_RXD1_Pin;
+ 176              		.loc 1 237 3 view .LVU48
+ 177              		.loc 1 237 23 is_stmt 0 view .LVU49
+ 178 00b6 3223     		movs	r3, #50
+ 179 00b8 0793     		str	r3, [sp, #28]
+ 238:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 180              		.loc 1 238 3 is_stmt 1 view .LVU50
+ 181              		.loc 1 238 24 is_stmt 0 view .LVU51
+ 182 00ba 4FF00208 		mov	r8, #2
+ 183 00be CDF82080 		str	r8, [sp, #32]
+ 239:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 184              		.loc 1 239 3 is_stmt 1 view .LVU52
+ 185              		.loc 1 239 24 is_stmt 0 view .LVU53
+ 186 00c2 0994     		str	r4, [sp, #36]
+ 240:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 187              		.loc 1 240 3 is_stmt 1 view .LVU54
+ 188              		.loc 1 240 25 is_stmt 0 view .LVU55
+ 189 00c4 0327     		movs	r7, #3
+ 190 00c6 0A97     		str	r7, [sp, #40]
+ 241:Core/Src/main.c ****   GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
+ 191              		.loc 1 241 3 is_stmt 1 view .LVU56
+ 192              		.loc 1 241 29 is_stmt 0 view .LVU57
+ 193 00c8 0B26     		movs	r6, #11
+ 194 00ca 0B96     		str	r6, [sp, #44]
+ 242:Core/Src/main.c ****   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+ 195              		.loc 1 242 3 is_stmt 1 view .LVU58
+ 196 00cc 07A9     		add	r1, sp, #28
+ 197 00ce 5046     		mov	r0, r10
+ 198 00d0 FFF7FEFF 		bl	HAL_GPIO_Init
+ 199              	.LVL3:
+ 243:Core/Src/main.c **** 
+ 244:Core/Src/main.c ****   /*Configure GPIO pins : RMII_REF_CLK_Pin RMII_MDIO_Pin RMII_CRS_DV_Pin */
+ 245:Core/Src/main.c ****   GPIO_InitStruct.Pin = RMII_REF_CLK_Pin|RMII_MDIO_Pin|RMII_CRS_DV_Pin;
+ 200              		.loc 1 245 3 view .LVU59
+ 201              		.loc 1 245 23 is_stmt 0 view .LVU60
+ 202 00d4 8623     		movs	r3, #134
+ 203 00d6 0793     		str	r3, [sp, #28]
+ 246:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 204              		.loc 1 246 3 is_stmt 1 view .LVU61
+ 205              		.loc 1 246 24 is_stmt 0 view .LVU62
+ 206 00d8 CDF82080 		str	r8, [sp, #32]
+ 247:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 207              		.loc 1 247 3 is_stmt 1 view .LVU63
+ 208              		.loc 1 247 24 is_stmt 0 view .LVU64
+ 209 00dc 0994     		str	r4, [sp, #36]
+ 248:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ARM GAS  /tmp/ccPOahi6.s 			page 9
+
+
+ 210              		.loc 1 248 3 is_stmt 1 view .LVU65
+ 211              		.loc 1 248 25 is_stmt 0 view .LVU66
+ 212 00de 0A97     		str	r7, [sp, #40]
+ 249:Core/Src/main.c ****   GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
+ 213              		.loc 1 249 3 is_stmt 1 view .LVU67
+ 214              		.loc 1 249 29 is_stmt 0 view .LVU68
+ 215 00e0 0B96     		str	r6, [sp, #44]
+ 250:Core/Src/main.c ****   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+ 216              		.loc 1 250 3 is_stmt 1 view .LVU69
+ 217 00e2 07A9     		add	r1, sp, #28
+ 218 00e4 2048     		ldr	r0, .L3+12
+ 219 00e6 FFF7FEFF 		bl	HAL_GPIO_Init
+ 220              	.LVL4:
+ 251:Core/Src/main.c **** 
+ 252:Core/Src/main.c ****   /*Configure GPIO pins : LD1_Pin LD3_Pin LD2_Pin */
+ 253:Core/Src/main.c ****   GPIO_InitStruct.Pin = LD1_Pin|LD3_Pin|LD2_Pin;
+ 221              		.loc 1 253 3 view .LVU70
+ 222              		.loc 1 253 23 is_stmt 0 view .LVU71
+ 223 00ea 44F28103 		movw	r3, #16513
+ 224 00ee 0793     		str	r3, [sp, #28]
+ 254:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 225              		.loc 1 254 3 is_stmt 1 view .LVU72
+ 226              		.loc 1 254 24 is_stmt 0 view .LVU73
+ 227 00f0 4FF0010A 		mov	r10, #1
+ 228 00f4 CDF820A0 		str	r10, [sp, #32]
+ 255:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 229              		.loc 1 255 3 is_stmt 1 view .LVU74
+ 230              		.loc 1 255 24 is_stmt 0 view .LVU75
+ 231 00f8 0994     		str	r4, [sp, #36]
+ 256:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 232              		.loc 1 256 3 is_stmt 1 view .LVU76
+ 233              		.loc 1 256 25 is_stmt 0 view .LVU77
+ 234 00fa 0A94     		str	r4, [sp, #40]
+ 257:Core/Src/main.c ****   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+ 235              		.loc 1 257 3 is_stmt 1 view .LVU78
+ 236 00fc 07A9     		add	r1, sp, #28
+ 237 00fe 4846     		mov	r0, r9
+ 238 0100 FFF7FEFF 		bl	HAL_GPIO_Init
+ 239              	.LVL5:
+ 258:Core/Src/main.c **** 
+ 259:Core/Src/main.c ****   /*Configure GPIO pin : RMII_TXD1_Pin */
+ 260:Core/Src/main.c ****   GPIO_InitStruct.Pin = RMII_TXD1_Pin;
+ 240              		.loc 1 260 3 view .LVU79
+ 241              		.loc 1 260 23 is_stmt 0 view .LVU80
+ 242 0104 CDF81CB0 		str	fp, [sp, #28]
+ 261:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 243              		.loc 1 261 3 is_stmt 1 view .LVU81
+ 244              		.loc 1 261 24 is_stmt 0 view .LVU82
+ 245 0108 CDF82080 		str	r8, [sp, #32]
+ 262:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 246              		.loc 1 262 3 is_stmt 1 view .LVU83
+ 247              		.loc 1 262 24 is_stmt 0 view .LVU84
+ 248 010c 0994     		str	r4, [sp, #36]
+ 263:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 249              		.loc 1 263 3 is_stmt 1 view .LVU85
+ 250              		.loc 1 263 25 is_stmt 0 view .LVU86
+ 251 010e 0A97     		str	r7, [sp, #40]
+ARM GAS  /tmp/ccPOahi6.s 			page 10
+
+
+ 264:Core/Src/main.c ****   GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
+ 252              		.loc 1 264 3 is_stmt 1 view .LVU87
+ 253              		.loc 1 264 29 is_stmt 0 view .LVU88
+ 254 0110 0B96     		str	r6, [sp, #44]
+ 265:Core/Src/main.c ****   HAL_GPIO_Init(RMII_TXD1_GPIO_Port, &GPIO_InitStruct);
+ 255              		.loc 1 265 3 is_stmt 1 view .LVU89
+ 256 0112 07A9     		add	r1, sp, #28
+ 257 0114 4846     		mov	r0, r9
+ 258 0116 FFF7FEFF 		bl	HAL_GPIO_Init
+ 259              	.LVL6:
+ 266:Core/Src/main.c **** 
+ 267:Core/Src/main.c ****   /*Configure GPIO pin : USB_PowerSwitchOn_Pin */
+ 268:Core/Src/main.c ****   GPIO_InitStruct.Pin = USB_PowerSwitchOn_Pin;
+ 260              		.loc 1 268 3 view .LVU90
+ 261              		.loc 1 268 23 is_stmt 0 view .LVU91
+ 262 011a 4023     		movs	r3, #64
+ 263 011c 0793     		str	r3, [sp, #28]
+ 269:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+ 264              		.loc 1 269 3 is_stmt 1 view .LVU92
+ 265              		.loc 1 269 24 is_stmt 0 view .LVU93
+ 266 011e CDF820A0 		str	r10, [sp, #32]
+ 270:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 267              		.loc 1 270 3 is_stmt 1 view .LVU94
+ 268              		.loc 1 270 24 is_stmt 0 view .LVU95
+ 269 0122 0994     		str	r4, [sp, #36]
+ 271:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+ 270              		.loc 1 271 3 is_stmt 1 view .LVU96
+ 271              		.loc 1 271 25 is_stmt 0 view .LVU97
+ 272 0124 0A94     		str	r4, [sp, #40]
+ 272:Core/Src/main.c ****   HAL_GPIO_Init(USB_PowerSwitchOn_GPIO_Port, &GPIO_InitStruct);
+ 273              		.loc 1 272 3 is_stmt 1 view .LVU98
+ 274 0126 07A9     		add	r1, sp, #28
+ 275 0128 2846     		mov	r0, r5
+ 276 012a FFF7FEFF 		bl	HAL_GPIO_Init
+ 277              	.LVL7:
+ 273:Core/Src/main.c **** 
+ 274:Core/Src/main.c ****   /*Configure GPIO pin : USB_OverCurrent_Pin */
+ 275:Core/Src/main.c ****   GPIO_InitStruct.Pin = USB_OverCurrent_Pin;
+ 278              		.loc 1 275 3 view .LVU99
+ 279              		.loc 1 275 23 is_stmt 0 view .LVU100
+ 280 012e 8023     		movs	r3, #128
+ 281 0130 0793     		str	r3, [sp, #28]
+ 276:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+ 282              		.loc 1 276 3 is_stmt 1 view .LVU101
+ 283              		.loc 1 276 24 is_stmt 0 view .LVU102
+ 284 0132 0894     		str	r4, [sp, #32]
+ 277:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 285              		.loc 1 277 3 is_stmt 1 view .LVU103
+ 286              		.loc 1 277 24 is_stmt 0 view .LVU104
+ 287 0134 0994     		str	r4, [sp, #36]
+ 278:Core/Src/main.c ****   HAL_GPIO_Init(USB_OverCurrent_GPIO_Port, &GPIO_InitStruct);
+ 288              		.loc 1 278 3 is_stmt 1 view .LVU105
+ 289 0136 07A9     		add	r1, sp, #28
+ 290 0138 2846     		mov	r0, r5
+ 291 013a FFF7FEFF 		bl	HAL_GPIO_Init
+ 292              	.LVL8:
+ 279:Core/Src/main.c **** 
+ARM GAS  /tmp/ccPOahi6.s 			page 11
+
+
+ 280:Core/Src/main.c ****   /*Configure GPIO pins : RMII_TX_EN_Pin RMII_TXD0_Pin */
+ 281:Core/Src/main.c ****   GPIO_InitStruct.Pin = RMII_TX_EN_Pin|RMII_TXD0_Pin;
+ 293              		.loc 1 281 3 view .LVU106
+ 294              		.loc 1 281 23 is_stmt 0 view .LVU107
+ 295 013e 4FF42053 		mov	r3, #10240
+ 296 0142 0793     		str	r3, [sp, #28]
+ 282:Core/Src/main.c ****   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+ 297              		.loc 1 282 3 is_stmt 1 view .LVU108
+ 298              		.loc 1 282 24 is_stmt 0 view .LVU109
+ 299 0144 CDF82080 		str	r8, [sp, #32]
+ 283:Core/Src/main.c ****   GPIO_InitStruct.Pull = GPIO_NOPULL;
+ 300              		.loc 1 283 3 is_stmt 1 view .LVU110
+ 301              		.loc 1 283 24 is_stmt 0 view .LVU111
+ 302 0148 0994     		str	r4, [sp, #36]
+ 284:Core/Src/main.c ****   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+ 303              		.loc 1 284 3 is_stmt 1 view .LVU112
+ 304              		.loc 1 284 25 is_stmt 0 view .LVU113
+ 305 014a 0A97     		str	r7, [sp, #40]
+ 285:Core/Src/main.c ****   GPIO_InitStruct.Alternate = GPIO_AF11_ETH;
+ 306              		.loc 1 285 3 is_stmt 1 view .LVU114
+ 307              		.loc 1 285 29 is_stmt 0 view .LVU115
+ 308 014c 0B96     		str	r6, [sp, #44]
+ 286:Core/Src/main.c ****   HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+ 309              		.loc 1 286 3 is_stmt 1 view .LVU116
+ 310 014e 07A9     		add	r1, sp, #28
+ 311 0150 2846     		mov	r0, r5
+ 312 0152 FFF7FEFF 		bl	HAL_GPIO_Init
+ 313              	.LVL9:
+ 287:Core/Src/main.c **** 
+ 288:Core/Src/main.c **** }
+ 314              		.loc 1 288 1 is_stmt 0 view .LVU117
+ 315 0156 0DB0     		add	sp, sp, #52
+ 316              	.LCFI2:
+ 317              		.cfi_def_cfa_offset 36
+ 318              		@ sp needed
+ 319 0158 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 320              	.L4:
+ 321              		.align	2
+ 322              	.L3:
+ 323 015c 00380240 		.word	1073887232
+ 324 0160 00180240 		.word	1073879040
+ 325 0164 00001110 		.word	269549568
+ 326 0168 00000240 		.word	1073872896
+ 327 016c 00040240 		.word	1073873920
+ 328 0170 00080240 		.word	1073874944
+ 329              		.cfi_endproc
+ 330              	.LFE148:
+ 332              		.section	.text.MX_USART3_UART_Init,"ax",%progbits
+ 333              		.align	1
+ 334              		.syntax unified
+ 335              		.thumb
+ 336              		.thumb_func
+ 337              		.fpu fpv5-d16
+ 339              	MX_USART3_UART_Init:
+ 340              	.LFB147:
+ 178:Core/Src/main.c **** 
+ 341              		.loc 1 178 1 is_stmt 1 view -0
+ARM GAS  /tmp/ccPOahi6.s 			page 12
+
+
+ 342              		.cfi_startproc
+ 343              		@ args = 0, pretend = 0, frame = 0
+ 344              		@ frame_needed = 0, uses_anonymous_args = 0
+ 345 0000 08B5     		push	{r3, lr}
+ 346              	.LCFI3:
+ 347              		.cfi_def_cfa_offset 8
+ 348              		.cfi_offset 3, -8
+ 349              		.cfi_offset 14, -4
+ 187:Core/Src/main.c ****   huart3.Init.BaudRate = 115200;
+ 350              		.loc 1 187 3 view .LVU119
+ 187:Core/Src/main.c ****   huart3.Init.BaudRate = 115200;
+ 351              		.loc 1 187 19 is_stmt 0 view .LVU120
+ 352 0002 0948     		ldr	r0, .L7
+ 353 0004 094B     		ldr	r3, .L7+4
+ 354 0006 0360     		str	r3, [r0]
+ 188:Core/Src/main.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
+ 355              		.loc 1 188 3 is_stmt 1 view .LVU121
+ 188:Core/Src/main.c ****   huart3.Init.WordLength = UART_WORDLENGTH_8B;
+ 356              		.loc 1 188 24 is_stmt 0 view .LVU122
+ 357 0008 4FF4E133 		mov	r3, #115200
+ 358 000c 4360     		str	r3, [r0, #4]
+ 189:Core/Src/main.c ****   huart3.Init.StopBits = UART_STOPBITS_1;
+ 359              		.loc 1 189 3 is_stmt 1 view .LVU123
+ 189:Core/Src/main.c ****   huart3.Init.StopBits = UART_STOPBITS_1;
+ 360              		.loc 1 189 26 is_stmt 0 view .LVU124
+ 361 000e 0023     		movs	r3, #0
+ 362 0010 8360     		str	r3, [r0, #8]
+ 190:Core/Src/main.c ****   huart3.Init.Parity = UART_PARITY_NONE;
+ 363              		.loc 1 190 3 is_stmt 1 view .LVU125
+ 190:Core/Src/main.c ****   huart3.Init.Parity = UART_PARITY_NONE;
+ 364              		.loc 1 190 24 is_stmt 0 view .LVU126
+ 365 0012 C360     		str	r3, [r0, #12]
+ 191:Core/Src/main.c ****   huart3.Init.Mode = UART_MODE_TX_RX;
+ 366              		.loc 1 191 3 is_stmt 1 view .LVU127
+ 191:Core/Src/main.c ****   huart3.Init.Mode = UART_MODE_TX_RX;
+ 367              		.loc 1 191 22 is_stmt 0 view .LVU128
+ 368 0014 0361     		str	r3, [r0, #16]
+ 192:Core/Src/main.c ****   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 369              		.loc 1 192 3 is_stmt 1 view .LVU129
+ 192:Core/Src/main.c ****   huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+ 370              		.loc 1 192 20 is_stmt 0 view .LVU130
+ 371 0016 0C22     		movs	r2, #12
+ 372 0018 4261     		str	r2, [r0, #20]
+ 193:Core/Src/main.c ****   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+ 373              		.loc 1 193 3 is_stmt 1 view .LVU131
+ 193:Core/Src/main.c ****   huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+ 374              		.loc 1 193 25 is_stmt 0 view .LVU132
+ 375 001a 8361     		str	r3, [r0, #24]
+ 194:Core/Src/main.c ****   huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+ 376              		.loc 1 194 3 is_stmt 1 view .LVU133
+ 194:Core/Src/main.c ****   huart3.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+ 377              		.loc 1 194 28 is_stmt 0 view .LVU134
+ 378 001c C361     		str	r3, [r0, #28]
+ 195:Core/Src/main.c ****   huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 379              		.loc 1 195 3 is_stmt 1 view .LVU135
+ 195:Core/Src/main.c ****   huart3.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+ 380              		.loc 1 195 30 is_stmt 0 view .LVU136
+ARM GAS  /tmp/ccPOahi6.s 			page 13
+
+
+ 381 001e 0362     		str	r3, [r0, #32]
+ 196:Core/Src/main.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
+ 382              		.loc 1 196 3 is_stmt 1 view .LVU137
+ 196:Core/Src/main.c ****   if (HAL_UART_Init(&huart3) != HAL_OK)
+ 383              		.loc 1 196 38 is_stmt 0 view .LVU138
+ 384 0020 4362     		str	r3, [r0, #36]
+ 197:Core/Src/main.c ****   {
+ 385              		.loc 1 197 3 is_stmt 1 view .LVU139
+ 197:Core/Src/main.c ****   {
+ 386              		.loc 1 197 7 is_stmt 0 view .LVU140
+ 387 0022 FFF7FEFF 		bl	HAL_UART_Init
+ 388              	.LVL10:
+ 205:Core/Src/main.c **** 
+ 389              		.loc 1 205 1 view .LVU141
+ 390 0026 08BD     		pop	{r3, pc}
+ 391              	.L8:
+ 392              		.align	2
+ 393              	.L7:
+ 394 0028 00000000 		.word	huart3
+ 395 002c 00480040 		.word	1073760256
+ 396              		.cfi_endproc
+ 397              	.LFE147:
+ 399              		.section	.text.SystemClock_Config,"ax",%progbits
+ 400              		.align	1
+ 401              		.global	SystemClock_Config
+ 402              		.syntax unified
+ 403              		.thumb
+ 404              		.thumb_func
+ 405              		.fpu fpv5-d16
+ 407              	SystemClock_Config:
+ 408              	.LFB146:
+ 117:Core/Src/main.c ****   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+ 409              		.loc 1 117 1 is_stmt 1 view -0
+ 410              		.cfi_startproc
+ 411              		@ args = 0, pretend = 0, frame = 224
+ 412              		@ frame_needed = 0, uses_anonymous_args = 0
+ 413 0000 30B5     		push	{r4, r5, lr}
+ 414              	.LCFI4:
+ 415              		.cfi_def_cfa_offset 12
+ 416              		.cfi_offset 4, -12
+ 417              		.cfi_offset 5, -8
+ 418              		.cfi_offset 14, -4
+ 419 0002 B9B0     		sub	sp, sp, #228
+ 420              	.LCFI5:
+ 421              		.cfi_def_cfa_offset 240
+ 118:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 422              		.loc 1 118 3 view .LVU143
+ 118:Core/Src/main.c ****   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
+ 423              		.loc 1 118 22 is_stmt 0 view .LVU144
+ 424 0004 3422     		movs	r2, #52
+ 425 0006 0021     		movs	r1, #0
+ 426 0008 2BA8     		add	r0, sp, #172
+ 427 000a FFF7FEFF 		bl	memset
+ 428              	.LVL11:
+ 119:Core/Src/main.c ****   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+ 429              		.loc 1 119 3 is_stmt 1 view .LVU145
+ 119:Core/Src/main.c ****   RCC_PeriphCLKInitTypeDef PeriphClkInitStruct = {0};
+ARM GAS  /tmp/ccPOahi6.s 			page 14
+
+
+ 430              		.loc 1 119 22 is_stmt 0 view .LVU146
+ 431 000e 0024     		movs	r4, #0
+ 432 0010 2694     		str	r4, [sp, #152]
+ 433 0012 2794     		str	r4, [sp, #156]
+ 434 0014 2894     		str	r4, [sp, #160]
+ 435 0016 2994     		str	r4, [sp, #164]
+ 436 0018 2A94     		str	r4, [sp, #168]
+ 120:Core/Src/main.c **** 
+ 437              		.loc 1 120 3 is_stmt 1 view .LVU147
+ 120:Core/Src/main.c **** 
+ 438              		.loc 1 120 28 is_stmt 0 view .LVU148
+ 439 001a 9022     		movs	r2, #144
+ 440 001c 2146     		mov	r1, r4
+ 441 001e 02A8     		add	r0, sp, #8
+ 442 0020 FFF7FEFF 		bl	memset
+ 443              	.LVL12:
+ 124:Core/Src/main.c ****   /** Configure the main internal regulator output voltage
+ 444              		.loc 1 124 3 is_stmt 1 view .LVU149
+ 445 0024 FFF7FEFF 		bl	HAL_PWR_EnableBkUpAccess
+ 446              	.LVL13:
+ 127:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 447              		.loc 1 127 3 view .LVU150
+ 448              	.LBB8:
+ 127:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 449              		.loc 1 127 3 view .LVU151
+ 127:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 450              		.loc 1 127 3 view .LVU152
+ 451 0028 204B     		ldr	r3, .L11
+ 452 002a 1A6C     		ldr	r2, [r3, #64]
+ 453 002c 42F08052 		orr	r2, r2, #268435456
+ 454 0030 1A64     		str	r2, [r3, #64]
+ 127:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 455              		.loc 1 127 3 view .LVU153
+ 456 0032 1B6C     		ldr	r3, [r3, #64]
+ 457 0034 03F08053 		and	r3, r3, #268435456
+ 458 0038 0093     		str	r3, [sp]
+ 127:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 459              		.loc 1 127 3 view .LVU154
+ 460 003a 009B     		ldr	r3, [sp]
+ 461              	.LBE8:
+ 127:Core/Src/main.c ****   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 462              		.loc 1 127 3 view .LVU155
+ 128:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 463              		.loc 1 128 3 view .LVU156
+ 464              	.LBB9:
+ 128:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 465              		.loc 1 128 3 view .LVU157
+ 128:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 466              		.loc 1 128 3 view .LVU158
+ 467 003c 1C4B     		ldr	r3, .L11+4
+ 468 003e 1A68     		ldr	r2, [r3]
+ 469 0040 42F44042 		orr	r2, r2, #49152
+ 470 0044 1A60     		str	r2, [r3]
+ 128:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 471              		.loc 1 128 3 view .LVU159
+ 472 0046 1B68     		ldr	r3, [r3]
+ 473 0048 03F44043 		and	r3, r3, #49152
+ARM GAS  /tmp/ccPOahi6.s 			page 15
+
+
+ 474 004c 0193     		str	r3, [sp, #4]
+ 128:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 475              		.loc 1 128 3 view .LVU160
+ 476 004e 019B     		ldr	r3, [sp, #4]
+ 477              	.LBE9:
+ 128:Core/Src/main.c ****   /** Initializes the RCC Oscillators according to the specified parameters
+ 478              		.loc 1 128 3 view .LVU161
+ 132:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+ 479              		.loc 1 132 3 view .LVU162
+ 132:Core/Src/main.c ****   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+ 480              		.loc 1 132 36 is_stmt 0 view .LVU163
+ 481 0050 0123     		movs	r3, #1
+ 482 0052 2B93     		str	r3, [sp, #172]
+ 133:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 483              		.loc 1 133 3 is_stmt 1 view .LVU164
+ 133:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
+ 484              		.loc 1 133 30 is_stmt 0 view .LVU165
+ 485 0054 4FF4A023 		mov	r3, #327680
+ 486 0058 2C93     		str	r3, [sp, #176]
+ 134:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 487              		.loc 1 134 3 is_stmt 1 view .LVU166
+ 134:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+ 488              		.loc 1 134 34 is_stmt 0 view .LVU167
+ 489 005a 0225     		movs	r5, #2
+ 490 005c 3195     		str	r5, [sp, #196]
+ 135:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLM = 4;
+ 491              		.loc 1 135 3 is_stmt 1 view .LVU168
+ 135:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLM = 4;
+ 492              		.loc 1 135 35 is_stmt 0 view .LVU169
+ 493 005e 4FF48003 		mov	r3, #4194304
+ 494 0062 3293     		str	r3, [sp, #200]
+ 136:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLN = 216;
+ 495              		.loc 1 136 3 is_stmt 1 view .LVU170
+ 136:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLN = 216;
+ 496              		.loc 1 136 30 is_stmt 0 view .LVU171
+ 497 0064 0423     		movs	r3, #4
+ 498 0066 3393     		str	r3, [sp, #204]
+ 137:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+ 499              		.loc 1 137 3 is_stmt 1 view .LVU172
+ 137:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
+ 500              		.loc 1 137 30 is_stmt 0 view .LVU173
+ 501 0068 D823     		movs	r3, #216
+ 502 006a 3493     		str	r3, [sp, #208]
+ 138:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLQ = 9;
+ 503              		.loc 1 138 3 is_stmt 1 view .LVU174
+ 138:Core/Src/main.c ****   RCC_OscInitStruct.PLL.PLLQ = 9;
+ 504              		.loc 1 138 30 is_stmt 0 view .LVU175
+ 505 006c 3595     		str	r5, [sp, #212]
+ 139:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 506              		.loc 1 139 3 is_stmt 1 view .LVU176
+ 139:Core/Src/main.c ****   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+ 507              		.loc 1 139 30 is_stmt 0 view .LVU177
+ 508 006e 0923     		movs	r3, #9
+ 509 0070 3693     		str	r3, [sp, #216]
+ 140:Core/Src/main.c ****   {
+ 510              		.loc 1 140 3 is_stmt 1 view .LVU178
+ 140:Core/Src/main.c ****   {
+ARM GAS  /tmp/ccPOahi6.s 			page 16
+
+
+ 511              		.loc 1 140 7 is_stmt 0 view .LVU179
+ 512 0072 2BA8     		add	r0, sp, #172
+ 513 0074 FFF7FEFF 		bl	HAL_RCC_OscConfig
+ 514              	.LVL14:
+ 146:Core/Src/main.c ****   {
+ 515              		.loc 1 146 3 is_stmt 1 view .LVU180
+ 146:Core/Src/main.c ****   {
+ 516              		.loc 1 146 7 is_stmt 0 view .LVU181
+ 517 0078 FFF7FEFF 		bl	HAL_PWREx_EnableOverDrive
+ 518              	.LVL15:
+ 152:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 519              		.loc 1 152 3 is_stmt 1 view .LVU182
+ 152:Core/Src/main.c ****                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+ 520              		.loc 1 152 31 is_stmt 0 view .LVU183
+ 521 007c 0F23     		movs	r3, #15
+ 522 007e 2693     		str	r3, [sp, #152]
+ 154:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 523              		.loc 1 154 3 is_stmt 1 view .LVU184
+ 154:Core/Src/main.c ****   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+ 524              		.loc 1 154 34 is_stmt 0 view .LVU185
+ 525 0080 2795     		str	r5, [sp, #156]
+ 155:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+ 526              		.loc 1 155 3 is_stmt 1 view .LVU186
+ 155:Core/Src/main.c ****   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+ 527              		.loc 1 155 35 is_stmt 0 view .LVU187
+ 528 0082 2894     		str	r4, [sp, #160]
+ 156:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+ 529              		.loc 1 156 3 is_stmt 1 view .LVU188
+ 156:Core/Src/main.c ****   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
+ 530              		.loc 1 156 36 is_stmt 0 view .LVU189
+ 531 0084 4FF4A053 		mov	r3, #5120
+ 532 0088 2993     		str	r3, [sp, #164]
+ 157:Core/Src/main.c **** 
+ 533              		.loc 1 157 3 is_stmt 1 view .LVU190
+ 157:Core/Src/main.c **** 
+ 534              		.loc 1 157 36 is_stmt 0 view .LVU191
+ 535 008a 4FF48053 		mov	r3, #4096
+ 536 008e 2A93     		str	r3, [sp, #168]
+ 159:Core/Src/main.c ****   {
+ 537              		.loc 1 159 3 is_stmt 1 view .LVU192
+ 159:Core/Src/main.c ****   {
+ 538              		.loc 1 159 7 is_stmt 0 view .LVU193
+ 539 0090 0721     		movs	r1, #7
+ 540 0092 26A8     		add	r0, sp, #152
+ 541 0094 FFF7FEFF 		bl	HAL_RCC_ClockConfig
+ 542              	.LVL16:
+ 163:Core/Src/main.c ****   PeriphClkInitStruct.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
+ 543              		.loc 1 163 3 is_stmt 1 view .LVU194
+ 163:Core/Src/main.c ****   PeriphClkInitStruct.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
+ 544              		.loc 1 163 44 is_stmt 0 view .LVU195
+ 545 0098 064B     		ldr	r3, .L11+8
+ 546 009a 0293     		str	r3, [sp, #8]
+ 164:Core/Src/main.c ****   PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48SOURCE_PLL;
+ 547              		.loc 1 164 3 is_stmt 1 view .LVU196
+ 164:Core/Src/main.c ****   PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48SOURCE_PLL;
+ 548              		.loc 1 164 44 is_stmt 0 view .LVU197
+ 549 009c 1594     		str	r4, [sp, #84]
+ARM GAS  /tmp/ccPOahi6.s 			page 17
+
+
+ 165:Core/Src/main.c ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+ 550              		.loc 1 165 3 is_stmt 1 view .LVU198
+ 165:Core/Src/main.c ****   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK)
+ 551              		.loc 1 165 43 is_stmt 0 view .LVU199
+ 552 009e 2194     		str	r4, [sp, #132]
+ 166:Core/Src/main.c ****   {
+ 553              		.loc 1 166 3 is_stmt 1 view .LVU200
+ 166:Core/Src/main.c ****   {
+ 554              		.loc 1 166 7 is_stmt 0 view .LVU201
+ 555 00a0 02A8     		add	r0, sp, #8
+ 556 00a2 FFF7FEFF 		bl	HAL_RCCEx_PeriphCLKConfig
+ 557              	.LVL17:
+ 170:Core/Src/main.c **** 
+ 558              		.loc 1 170 1 view .LVU202
+ 559 00a6 39B0     		add	sp, sp, #228
+ 560              	.LCFI6:
+ 561              		.cfi_def_cfa_offset 12
+ 562              		@ sp needed
+ 563 00a8 30BD     		pop	{r4, r5, pc}
+ 564              	.L12:
+ 565 00aa 00BF     		.align	2
+ 566              	.L11:
+ 567 00ac 00380240 		.word	1073887232
+ 568 00b0 00700040 		.word	1073770496
+ 569 00b4 00012000 		.word	2097408
+ 570              		.cfi_endproc
+ 571              	.LFE146:
+ 573              		.section	.text.main,"ax",%progbits
+ 574              		.align	1
+ 575              		.global	main
+ 576              		.syntax unified
+ 577              		.thumb
+ 578              		.thumb_func
+ 579              		.fpu fpv5-d16
+ 581              	main:
+ 582              	.LFB145:
+  69:Core/Src/main.c ****   /* USER CODE BEGIN 1 */
+ 583              		.loc 1 69 1 is_stmt 1 view -0
+ 584              		.cfi_startproc
+ 585              		@ Volatile: function does not return.
+ 586              		@ args = 0, pretend = 0, frame = 0
+ 587              		@ frame_needed = 0, uses_anonymous_args = 0
+ 588 0000 08B5     		push	{r3, lr}
+ 589              	.LCFI7:
+ 590              		.cfi_def_cfa_offset 8
+ 591              		.cfi_offset 3, -8
+ 592              		.cfi_offset 14, -4
+  77:Core/Src/main.c **** 
+ 593              		.loc 1 77 3 view .LVU204
+ 594 0002 FFF7FEFF 		bl	HAL_Init
+ 595              	.LVL18:
+  84:Core/Src/main.c **** 
+ 596              		.loc 1 84 3 view .LVU205
+ 597 0006 FFF7FEFF 		bl	SystemClock_Config
+ 598              	.LVL19:
+  91:Core/Src/main.c ****   MX_USART3_UART_Init();
+ 599              		.loc 1 91 3 view .LVU206
+ARM GAS  /tmp/ccPOahi6.s 			page 18
+
+
+ 600 000a FFF7FEFF 		bl	MX_GPIO_Init
+ 601              	.LVL20:
+  92:Core/Src/main.c ****   MX_USB_DEVICE_Init();
+ 602              		.loc 1 92 3 view .LVU207
+ 603 000e FFF7FEFF 		bl	MX_USART3_UART_Init
+ 604              	.LVL21:
+  93:Core/Src/main.c ****   /* USER CODE BEGIN 2 */
+ 605              		.loc 1 93 3 view .LVU208
+ 606 0012 FFF7FEFF 		bl	MX_USB_DEVICE_Init
+ 607              	.LVL22:
+  97:Core/Src/main.c ****    goToApp();
+ 608              		.loc 1 97 4 view .LVU209
+ 609 0016 FFF7FEFF 		bl	deinitEverything
+ 610              	.LVL23:
+  98:Core/Src/main.c ****   /* USER CODE END 2 */
+ 611              		.loc 1 98 4 view .LVU210
+ 612 001a FFF7FEFF 		bl	goToApp
+ 613              	.LVL24:
+ 614              	.L14:
+ 103:Core/Src/main.c ****   {
+ 615              		.loc 1 103 3 discriminator 1 view .LVU211
+ 108:Core/Src/main.c ****   /* USER CODE END 3 */
+ 616              		.loc 1 108 3 discriminator 1 view .LVU212
+ 103:Core/Src/main.c ****   {
+ 617              		.loc 1 103 9 discriminator 1 view .LVU213
+ 618 001e FEE7     		b	.L14
+ 619              		.cfi_endproc
+ 620              	.LFE145:
+ 622              		.section	.text.Error_Handler,"ax",%progbits
+ 623              		.align	1
+ 624              		.global	Error_Handler
+ 625              		.syntax unified
+ 626              		.thumb
+ 627              		.thumb_func
+ 628              		.fpu fpv5-d16
+ 630              	Error_Handler:
+ 631              	.LFB149:
+ 289:Core/Src/main.c **** 
+ 290:Core/Src/main.c **** /* USER CODE BEGIN 4 */
+ 291:Core/Src/main.c **** 
+ 292:Core/Src/main.c **** /* USER CODE END 4 */
+ 293:Core/Src/main.c **** 
+ 294:Core/Src/main.c **** /**
+ 295:Core/Src/main.c ****   * @brief  This function is executed in case of error occurrence.
+ 296:Core/Src/main.c ****   * @retval None
+ 297:Core/Src/main.c ****   */
+ 298:Core/Src/main.c **** void Error_Handler(void)
+ 299:Core/Src/main.c **** {
+ 632              		.loc 1 299 1 view -0
+ 633              		.cfi_startproc
+ 634              		@ args = 0, pretend = 0, frame = 0
+ 635              		@ frame_needed = 0, uses_anonymous_args = 0
+ 636              		@ link register save eliminated.
+ 300:Core/Src/main.c ****   /* USER CODE BEGIN Error_Handler_Debug */
+ 301:Core/Src/main.c ****   /* User can add his own implementation to report the HAL error return state */
+ 302:Core/Src/main.c **** 
+ 303:Core/Src/main.c ****   /* USER CODE END Error_Handler_Debug */
+ARM GAS  /tmp/ccPOahi6.s 			page 19
+
+
+ 304:Core/Src/main.c **** }
+ 637              		.loc 1 304 1 view .LVU215
+ 638 0000 7047     		bx	lr
+ 639              		.cfi_endproc
+ 640              	.LFE149:
+ 642              		.comm	huart3,128,4
+ 643              		.comm	flashStatus,1,1
+ 644              		.comm	Flashed_offset,4,4
+ 645              		.text
+ 646              	.Letext0:
+ 647              		.file 2 "/usr/lib/gcc/arm-none-eabi/9.2.1/include/stdint.h"
+ 648              		.file 3 "Drivers/CMSIS/Include/core_cm7.h"
+ 649              		.file 4 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/system_stm32f7xx.h"
+ 650              		.file 5 "Drivers/CMSIS/Device/ST/STM32F7xx/Include/stm32f767xx.h"
+ 651              		.file 6 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_def.h"
+ 652              		.file 7 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc_ex.h"
+ 653              		.file 8 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h"
+ 654              		.file 9 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_gpio.h"
+ 655              		.file 10 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_dma.h"
+ 656              		.file 11 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_uart.h"
+ 657              		.file 12 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h"
+ 658              		.file 13 "/usr/lib/gcc/arm-none-eabi/9.2.1/include/stddef.h"
+ 659              		.file 14 "/usr/include/newlib/sys/_types.h"
+ 660              		.file 15 "/usr/include/newlib/sys/reent.h"
+ 661              		.file 16 "/usr/include/newlib/sys/lock.h"
+ 662              		.file 17 "/usr/include/newlib/stdlib.h"
+ 663              		.file 18 "Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h"
+ 664              		.file 19 "Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h"
+ 665              		.file 20 "USB_DEVICE/App/usbd_cdc_if.h"
+ 666              		.file 21 "Core/boot_lib/bootloader.h"
+ 667              		.file 22 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr.h"
+ 668              		.file 23 "Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_pwr_ex.h"
+ 669              		.file 24 "USB_DEVICE/App/usb_device.h"
+ 670              		.file 25 "<built-in>"
+ARM GAS  /tmp/ccPOahi6.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/ccPOahi6.s:17     .text.MX_GPIO_Init:0000000000000000 $t
+     /tmp/ccPOahi6.s:24     .text.MX_GPIO_Init:0000000000000000 MX_GPIO_Init
+     /tmp/ccPOahi6.s:323    .text.MX_GPIO_Init:000000000000015c $d
+     /tmp/ccPOahi6.s:333    .text.MX_USART3_UART_Init:0000000000000000 $t
+     /tmp/ccPOahi6.s:339    .text.MX_USART3_UART_Init:0000000000000000 MX_USART3_UART_Init
+     /tmp/ccPOahi6.s:394    .text.MX_USART3_UART_Init:0000000000000028 $d
+                            *COM*:0000000000000080 huart3
+     /tmp/ccPOahi6.s:400    .text.SystemClock_Config:0000000000000000 $t
+     /tmp/ccPOahi6.s:407    .text.SystemClock_Config:0000000000000000 SystemClock_Config
+     /tmp/ccPOahi6.s:567    .text.SystemClock_Config:00000000000000ac $d
+     /tmp/ccPOahi6.s:574    .text.main:0000000000000000 $t
+     /tmp/ccPOahi6.s:581    .text.main:0000000000000000 main
+     /tmp/ccPOahi6.s:623    .text.Error_Handler:0000000000000000 $t
+     /tmp/ccPOahi6.s:630    .text.Error_Handler:0000000000000000 Error_Handler
+                            *COM*:0000000000000001 flashStatus
+                            *COM*:0000000000000004 Flashed_offset
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_GPIO_Init
+HAL_UART_Init
+memset
+HAL_PWR_EnableBkUpAccess
+HAL_RCC_OscConfig
+HAL_PWREx_EnableOverDrive
+HAL_RCC_ClockConfig
+HAL_RCCEx_PeriphCLKConfig
+HAL_Init
+MX_USB_DEVICE_Init
+deinitEverything
+goToApp
