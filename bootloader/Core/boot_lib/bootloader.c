@@ -43,8 +43,8 @@ void deinitEverything(void)
 
 void goToApp(void)
 {
-  uint32_t stack = *((uint32_t *) 0x8040000);
-  uint32_t prog = *((uint32_t *) 0x8040004);
+  uint32_t stack = *((uint32_t *) APP_ADDR);
+  uint32_t prog = *((uint32_t *) APP_ADDR_P);
   void (*jump)(void);
   jump = prog;
   SCB->VTOR = (uint32_t)APP_ADDR;
@@ -108,19 +108,19 @@ void flashWord(uint32_t dataToFlash)
 
 void eraseMemory()
 {
-
     HAL_FLASH_Unlock();
     FLASH_EraseInitTypeDef EraseInitStruct;
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
+    EraseInitStruct.VoltageRange = FLASH_VOLTAGE_RANGE_3;
 
-//#ifdef USE_F767ZI
-    EraseInitStruct.Sector = APP_ADDR;
+#ifdef USE_F767ZI
+    EraseInitStruct.Sector = FLASH_SECTOR_5;
     EraseInitStruct.NbSectors = 1; //to check
-/*#else
+#else
     EraseInitStruct.PageAddress = APP_ADDR;
     EraseInitStruct.NbPages = 1; //to check
 #endif
-*/
+
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     HAL_Delay(50);
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
@@ -130,8 +130,9 @@ void eraseMemory()
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
     uint32_t PageError;
-    volatile HAL_StatusTypeDef status_erase, status_write;
+    volatile HAL_StatusTypeDef status_erase;
     status_erase = HAL_FLASHEx_Erase(&EraseInitStruct, &PageError);
+
     if (status_erase != HAL_OK) //blink red bad
     {
         uint32_t error = (FLASH->SR & FLASH_FLAG_ALL_ERRORS);
@@ -154,7 +155,6 @@ void eraseMemory()
         HAL_Delay(50);
         HAL_GPIO_WritePin(LD1_GPIO_Port, LD1_Pin, GPIO_PIN_RESET);
     }
-
 
     HAL_FLASH_Lock();
 
