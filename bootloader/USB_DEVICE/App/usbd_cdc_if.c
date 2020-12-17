@@ -23,7 +23,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include "bootloader.h"
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -264,6 +264,23 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+
+  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);//LED ON
+  uint16_t length = (uint16_t) *Len;
+  if(length == 4 && flashStatus == Unlocked)
+  {
+      uint32_t dataToFlash = (Buf[3]<<24) +
+							  (Buf[2]<<16) +
+							  (Buf[1]<<8) +
+							  Buf[0];//32bit Word contains 4 Bytes
+	  flashWord(dataToFlash);
+  }
+  else
+  {
+		//messageHandler(Buf);
+  }
+  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);//LED OFF
+
   return (USBD_OK);
   /* USER CODE END 6 */
 }

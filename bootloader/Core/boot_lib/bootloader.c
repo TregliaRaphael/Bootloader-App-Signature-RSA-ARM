@@ -5,7 +5,7 @@ void bootloaderInit()
 {
 	Flashed_offset = 0;
 	flashStatus = Unerased;
-	BootloaderMode bootloaderMode;
+	//BootloaderMode bootloaderMode;
 
   
    /* if (HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) == GPIO_PIN_SET) //Enable flash mod
@@ -19,11 +19,11 @@ void bootloaderInit()
 
 
 
-void deinitEverything(void)
+static void deinitEverything(void)
 {
     //-- reset peripherals to guarantee flawless start of user application
 
-    //Mandatory for usb
+    //Mandatory for usb IF FAIL CHECK USB DEINIT
     HAL_GPIO_DeInit(LD1_GPIO_Port, LD1_Pin);
     HAL_GPIO_DeInit(LD2_GPIO_Port, LD2_Pin);
     HAL_GPIO_DeInit(LD3_GPIO_Port, LD3_Pin);
@@ -43,6 +43,7 @@ void deinitEverything(void)
 
 void goToApp(void)
 {
+  deinitEverything();
   uint32_t stack = *((uint32_t *) APP_ADDR);
   uint32_t prog = *((uint32_t *) APP_ADDR_P);
   void (*jump)(void);
@@ -65,8 +66,8 @@ void checkAndJump(void)
 		}
 		if(emptyCellCount != 10)
 			goToApp();
-		else
-			errorBlink();
+        else
+            __NOP();
 
     //else do nothing
 }
@@ -108,6 +109,8 @@ void flashWord(uint32_t dataToFlash)
 
 void eraseMemory()
 {
+    flashStatus = Erasing;
+
     HAL_FLASH_Unlock();
     FLASH_EraseInitTypeDef EraseInitStruct;
     EraseInitStruct.TypeErase = FLASH_TYPEERASE_SECTORS;
@@ -160,4 +163,77 @@ void eraseMemory()
 
     flashStatus = Erased;
 	Flashed_offset = 0;
+}
+
+
+static uint8_t string_compare(char array1[], char array2[], uint16_t length)
+{
+	 uint8_t comVAR=0, i;
+	 for(i=0;i<length;i++)
+	   	{
+	   		  if(array1[i]==array2[i])
+	   	  		  comVAR++;
+	   	  	  else comVAR=0;
+	   	}
+	 if (comVAR==length)
+		 	return 1;
+	 else 	return 0;
+}
+
+static void lockFlash(void)
+{
+	/* Lock the Flash to enable the flash control register access *************/
+	HAL_FLASH_Lock();
+
+	flashStatus = Locked;
+}
+
+static void unlockFlash(void)
+{
+    HAL_FLASH_Unlock();
+	flashStatus = Unlocked;
+
+}
+
+void messageHandler(uint8_t* Buf)
+{
+	if(string_compare((char*)Buf, ERASE_FLASH_MEMORY, strlen(ERASE_FLASH_MEMORY))
+			&& flashStatus != Unlocked)
+	{
+		eraseMemory();
+		CDC_Transmit_FS((uint8_t*)&"Flash: Erased!\n", strlen("Flash: Erased!\n"));
+
+	}
+    else if(string_compare((char*)Buf, FLASHING_START, strlen(FLASHING_START)))
+	{
+        if (flashStatus != Erased)
+            eraseMemory();
+        unlockFlash();
+		CDC_Transmit_FS((uint8_t*)&"Flash: Unlocked!\n", strlen("Flash: Unlocked!\n"));
+
+	}
+    else if(string_compare((char*)Buf, FLASHING_FINISH, strlen(FLASHING_FINISH))
+			  && flashStatus == Unlocked)
+	{
+		lockFlash();
+        
+		CDC_Transmit_FS((uint8_t*)&"Flash: Success!\n", strlen("Flash: Success!\n"));
+
+        checkAndJump();
+
+	}
+    else if(string_compare((char*)Buf, FLASHING_ABORT, strlen(FLASHING_ABORT))
+			  && flashStatus == Unlocked)
+	{
+		lockFlash();
+
+		eraseMemory();
+
+		CDC_Transmit_FS((uint8_t*)&"Flash: Aborted!\n", strlen("Flash: Aborted!\n"));
+	}
+    else
+	{
+		CDC_Transmit_FS((uint8_t*)&"Error: Incorrect step or unknown command!\n",
+			  strlen("Error: Incorrect step or unknown command!\n"));
+	}
 }

@@ -137,6 +137,7 @@ PG13.GPIOParameters=GPIO_Label
 RCC.ADC34outputFreq_Value=72000000
 PC14/OSC32_IN.Signal=RCC_OSC32_IN
 PA14.Locked=true
+NVIC.OTG_FS_IRQn=true\:0\:0\:false\:false\:true\:false\:true
 ProjectManager.ToolChainLocation=
 PA2.GPIO_Label=RMII_MDIO [LAN8742A-CZ-TR_MDIO]
 RCC.LSI_VALUE=32000
