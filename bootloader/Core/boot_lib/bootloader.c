@@ -24,6 +24,10 @@ static void deinitEverything(void)
     //-- reset peripherals to guarantee flawless start of user application
 
     //Mandatory for usb IF FAIL CHECK USB DEINIT
+    USB_OTG_FS->GCCFG =   0x00000000;
+    USBD_Stop(&hUsbDeviceFS);
+    USBD_DeInit(&hUsbDeviceFS);
+
     HAL_GPIO_DeInit(LD1_GPIO_Port, LD1_Pin);
     HAL_GPIO_DeInit(LD2_GPIO_Port, LD2_Pin);
     HAL_GPIO_DeInit(LD3_GPIO_Port, LD3_Pin);

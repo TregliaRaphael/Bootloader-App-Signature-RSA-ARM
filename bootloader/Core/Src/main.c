@@ -46,6 +46,23 @@ UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 
+void HAL_Delay(uint32_t milliseconds) {
+
+   /* Initially clear flag */
+
+   (void) SysTick->CTRL;
+
+   while (milliseconds != 0) {
+
+      /* COUNTFLAG returns 1 if timer counted to 0 since the last flag read */
+
+      milliseconds -= (SysTick->CTRL & SysTick_CTRL_COUNTFLAG_Msk) >> SysTick_CTRL_COUNTFLAG_Pos;
+
+   }
+
+}
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
