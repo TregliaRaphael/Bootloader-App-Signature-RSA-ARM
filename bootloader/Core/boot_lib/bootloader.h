@@ -50,4 +50,6 @@ void flashWord(uint32_t dataToFlash);
 void eraseMemory(void);
 void messageHandler(uint8_t* Buf);
 
+void blinkLed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, int nbrblink, int delayms);
+
 #endif // MY_BOOTLOADER_H

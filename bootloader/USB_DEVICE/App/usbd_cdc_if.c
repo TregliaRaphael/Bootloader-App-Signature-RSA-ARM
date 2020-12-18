@@ -265,7 +265,6 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
 
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);//LED ON
   uint16_t length = (uint16_t) *Len;
   if(length == 4 && flashStatus == Unlocked)
   {
@@ -279,7 +278,6 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   {
 		messageHandler(Buf);
   }
-  HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);//LED OFF
 
   return (USBD_OK);
   /* USER CODE END 6 */

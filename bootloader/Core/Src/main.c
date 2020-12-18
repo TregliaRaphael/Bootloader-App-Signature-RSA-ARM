@@ -105,16 +105,18 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USART3_UART_Init();
+  //MX_USART3_UART_Init();
   MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
+
   bootloaderInit();
+
   if (HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) != GPIO_PIN_SET) 
     goToApp();
 
+  blinkLed(LD2_GPIO_Port, LD2_Pin, 2, 100);
 
   /* USER CODE END 2 */
-
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
