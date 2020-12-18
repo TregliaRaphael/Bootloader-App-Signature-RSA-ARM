@@ -12,19 +12,15 @@
 
 #include "main.h"
 #include "usbd_cdc_if.h"
+#include "crypto_hash_sha256.h"
 #include <string.h>
+#include <stdbool.h>
 
 typedef enum
 {
     JumpMode,
 	FlashMode
 } BootloaderMode;
-
-typedef enum
-{
-    App1,
-	App2
-} AppSelection;
 
 typedef enum
 {

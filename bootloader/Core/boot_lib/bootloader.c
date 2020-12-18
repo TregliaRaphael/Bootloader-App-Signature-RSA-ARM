@@ -1,20 +1,11 @@
 #include "bootloader.h"
 
+bool pwdFinded = false;
 
 void bootloaderInit()
 {
 	Flashed_offset = 0;
 	flashStatus = Unerased;
-	//BootloaderMode bootloaderMode;
-
-  
-   /* if (HAL_GPIO_ReadPin(USER_Btn_GPIO_Port, USER_Btn_Pin) == GPIO_PIN_SET) //Enable flash mod
-    {
-        //do nothing and wait flash
-    }
-    else
-        checkAndJump();
-*/
 }
 
 
@@ -128,8 +119,7 @@ void eraseMemory()
 
     if (status_erase != HAL_OK) //blink red bad
     {
-        uint32_t error = (FLASH->SR & FLASH_FLAG_ALL_ERRORS);
-        //printf("Write failed: %x \r\n", error);
+        //uint32_t error = (FLASH->SR & FLASH_FLAG_ALL_ERRORS);
         blinkLed(LD3_GPIO_Port, LD3_Pin, 2, 200);
     }
     else //blink Green good
@@ -208,7 +198,7 @@ void messageHandler(uint8_t* Buf)
 	}
     else
 	{
-        blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 500);
+
 	}
 }
 

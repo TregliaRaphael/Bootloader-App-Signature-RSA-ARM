@@ -40,6 +40,7 @@ Core/Src/main.c \
 Core/Src/stm32f7xx_it.c \
 Core/Src/stm32f7xx_hal_msp.c \
 Core/boot_lib/bootloader.c \
+Core/hash_lib/hash_sha256_cp.c \
 USB_DEVICE/App/usb_device.c \
 USB_DEVICE/App/usbd_desc.c \
 USB_DEVICE/App/usbd_cdc_if.c \
@@ -131,6 +132,7 @@ C_INCLUDES =  \
 -IUSB_DEVICE/Target \
 -ICore/Inc \
 -ICore/boot_lib \
+-ICore/hash_lib \
 -IDrivers/STM32F7xx_HAL_Driver/Inc \
 -IDrivers/STM32F7xx_HAL_Driver/Inc/Legacy \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
