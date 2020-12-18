@@ -44,7 +44,7 @@ uint32_t readWord(uint32_t address);
 void flashWord(uint32_t dataToFlash);
 
 void eraseMemory(void);
-void messageHandler(uint8_t* Buf);
+void messageHandler(uint8_t* Buf, uint16_t Len);
 
 void blinkLed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, int nbrblink, int delayms);
 

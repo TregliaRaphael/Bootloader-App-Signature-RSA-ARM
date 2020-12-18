@@ -276,7 +276,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   }
   else
   {
-		messageHandler(Buf);
+		messageHandler(Buf, length);
   }
 
   return (USBD_OK);

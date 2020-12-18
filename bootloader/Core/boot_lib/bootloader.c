@@ -1,6 +1,5 @@
 #include "bootloader.h"
 
-bool pwdFinded = false;
 
 void bootloaderInit()
 {
@@ -161,7 +160,10 @@ static void unlockFlash(void)
 
 }
 
-void messageHandler(uint8_t* Buf)
+uint8_t mdp[10] = "baleineau";
+bool pwFinded = false;
+
+void messageHandler(uint8_t* Buf, uint16_t Len)
 {
 	if(string_compare((char*)Buf, ERASE_FLASH_MEMORY, strlen(ERASE_FLASH_MEMORY))
 			&& flashStatus != Unlocked)
@@ -171,6 +173,14 @@ void messageHandler(uint8_t* Buf)
 	}
     else if(string_compare((char*)Buf, FLASHING_START, strlen(FLASHING_START)))
 	{
+        if (pwFinded == false)
+        {
+            CDC_Transmit_FS("NO\n", strlen("NO\n"));
+            return;
+        }
+        else
+            CDC_Transmit_FS("YE\n", strlen("YE\n"));
+
         if (flashStatus != Erased)
             eraseMemory();
         unlockFlash();
@@ -198,8 +208,20 @@ void messageHandler(uint8_t* Buf)
 	}
     else
 	{
-
+        uint8_t boug[30] = "MDP SUCESS\n";
+        uint8_t bougi[30] = "Data erased cheater\n";
+        if (string_compare((char*)Buf, mdp, strlen(mdp))){
+            CDC_Transmit_FS(boug, strlen(boug));
+            pwFinded = true;
+        }
+        else
+        {
+            CDC_Transmit_FS(bougi, strlen(bougi));
+		    eraseMemory();
+        }
 	}
+
+
 }
 
 
