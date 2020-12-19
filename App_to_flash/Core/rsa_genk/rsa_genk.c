@@ -1,14 +1,14 @@
 #include "rsa_genk.h"
 
 #define SHA256_SIZE 64
+#define PWD_SIZE 50
 
-unsigned char val = 0;
+unsigned char passwd[PWD_SIZE];
 mbedtls_hmac_drbg_context cont;
 mbedtls_rsa_context rsa_cont;
 bool keyGenerated = false;
 
 UART_HandleTypeDef *huart;
-
 
 void blinkLed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, int nbrblink, int delayms)
 {
@@ -38,28 +38,12 @@ static void UART_SEND(char *str) {
       strlen(str), 300);
 }
 
-static void UART_RECEIVE(unsigned char* buffer, size_t buffer_len, char* instruction) {
-  HAL_StatusTypeDef state;
-  while ((state = HAL_UART_Receive (huart, buffer, buffer_len, 300)) != HAL_OK) {
-    if (instruction) {
-      UART_SEND(instruction);
-    } else {
-      if (state == HAL_BUSY)
-        __NOP();
-      else if (state == HAL_TIMEOUT)
-        __NOP();
-      else if (state == HAL_ERROR)
-        __NOP();
-    }
-  }
-  //UART_SEND("FINISHED\n");
-}
-
 
 void mbedRsaInit(UART_HandleTypeDef *uart){
   mbedtls_hmac_drbg_init(&cont);
   mbedtls_rsa_init(&rsa_cont, MBEDTLS_RSA_PKCS_V15, 0);
   huart = uart;
+  pStatus = nosha;
 }
 
 
@@ -96,8 +80,6 @@ void sendPriv(void) {
   unsigned char sha256[SHA256_SIZE] = "d03a7ba834457c81580617b90aac6f6505232f556952fcb7fabb3a740b1c2170";
   unsigned char signedSHA[500];
   int error;
-
-  //UART_RECEIVE(sha256, SHA256_SIZE, NULL);
 
   error = mbedtls_rsa_rsassa_pkcs1_v15_sign(&rsa_cont, mbedtls_hmac_drbg_random, &cont,
       MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256, SHA256_SIZE, sha256, signedSHA);
@@ -140,4 +122,8 @@ void sendPub(void){
   send_mpi_buffer_UART(&rsa_cont.E);
   UART_SEND("\n");
   blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
+}
+
+void message_handler(uint8_t *buff, uint32_t len){
+  
 }
