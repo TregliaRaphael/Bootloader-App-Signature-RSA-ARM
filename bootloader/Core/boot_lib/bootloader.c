@@ -12,6 +12,7 @@ void bootloaderInit()
 static void deinitEverything(void)
 {
     //-- reset peripherals to guarantee flawless start of user application
+    MX_USB_DEVICE_DeInit();    
 
     HAL_GPIO_DeInit(LD1_GPIO_Port, LD1_Pin);
     HAL_GPIO_DeInit(LD2_GPIO_Port, LD2_Pin);
