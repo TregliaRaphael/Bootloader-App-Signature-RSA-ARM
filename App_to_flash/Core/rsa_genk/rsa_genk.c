@@ -135,7 +135,7 @@ static void send_mpi_buffer_UART(mbedtls_mpi *mpi) {
 
 //three blue blink for this fct
 void sendPub(void){
-  blinkLed(LD2_GPIO_Port, LD2_Pin, 2, 300);
+  blinkLed(LD2_GPIO_Port, LD2_Pin, 3, 300);
   send_mpi_buffer_UART(&rsa_cont.N);
   send_mpi_buffer_UART(&rsa_cont.E);
   UART_SEND("\n");
