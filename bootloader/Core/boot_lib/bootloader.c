@@ -176,6 +176,7 @@ void messageHandler(uint8_t* Buf, uint16_t Len)
         if (pwFinded == false)
         {
             CDC_Transmit_FS("NO\n", strlen("NO\n"));
+            blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 500);
             return;
         }
         else
@@ -194,17 +195,24 @@ void messageHandler(uint8_t* Buf, uint16_t Len)
 		lockFlash();
         
         blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 200);
-        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
+        HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 
         checkAndJump();
 
 	}
-    else if(string_compare((char*)Buf, FLASHING_ABORT, strlen(FLASHING_ABORT))
-			  && flashStatus == Unlocked)
+    else if(string_compare((char*)Buf, FLASHING_ABORT, strlen(FLASHING_ABORT)))
 	{
-		lockFlash();
-		eraseMemory();
-        blinkLed(LD3_GPIO_Port, LD3_Pin, 2, 1000);
+		if (flashStatus == Unlocked){
+			lockFlash();
+        		uint8_t boug[30] = "Flash aborted\n";
+                	CDC_Transmit_FS(boug, strlen(boug));
+			eraseMemory();}
+		else{
+        		uint8_t boug[40] = "Flashed exited successfully\n";
+                	CDC_Transmit_FS(boug, strlen(boug));}
+			
+        	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
+        	blinkLed(LD3_GPIO_Port, LD3_Pin, 2, 1000);
 	}
     else
 	{
@@ -213,6 +221,7 @@ void messageHandler(uint8_t* Buf, uint16_t Len)
         if (string_compare((char*)Buf, mdp, strlen(mdp))){
             CDC_Transmit_FS(boug, strlen(boug));
             pwFinded = true;
+            blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 500);
         }
         else
         {
