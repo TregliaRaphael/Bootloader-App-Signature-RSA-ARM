@@ -15,6 +15,7 @@ flash_erase = "#$ERASE_MEM"
 flash_abort =  "#$FLASH_ABORT"
 
 
+
 with open(sys.argv[1], 'rb') as binary:
     
     try:
@@ -47,7 +48,7 @@ with open(sys.argv[1], 'rb') as binary:
                 binary.seek(0)
                 print("Flash Ended, lets jump to the App")
                 s.write(flash_end.encode('ascii'))
-                sleep(0.2)
+                exit()
             else:
                 print("Flash rejected, need to enter a (valid) password")
         elif val == '2\n':
