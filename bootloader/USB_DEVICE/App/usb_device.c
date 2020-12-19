@@ -57,6 +57,7 @@ USBD_HandleTypeDef hUsbDeviceFS;
 /* USER CODE BEGIN 1 */
 void MX_USB_DEVICE_DeInit(void){
     HAL_PCD_DevDisconnect((PCD_HandleTypeDef *) &hUsbDeviceFS.pData);
+    USBD_Stop(&hUsbDeviceFS);
     USBD_DeInit(&hUsbDeviceFS);
 }
 /* USER CODE END 1 */

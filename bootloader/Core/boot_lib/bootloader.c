@@ -209,7 +209,7 @@ void messageHandler(uint8_t* Buf, uint16_t Len)
                 	CDC_Transmit_FS(boug, strlen(boug));
 			eraseMemory();}
 		else{
-        		uint8_t boug[40] = "Flashed exited successfully\n";
+        		uint8_t boug[40] = "No flash interrupted\n";
                 	CDC_Transmit_FS(boug, strlen(boug));}
 			
         	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
@@ -217,8 +217,8 @@ void messageHandler(uint8_t* Buf, uint16_t Len)
 	}
     else
 	{
-        uint8_t boug[30] = "MDP SUCESS\n";
-        uint8_t bougi[30] = "Data erased cheater\n";
+        uint8_t boug[30] = "GOOD Password\n";
+        uint8_t bougi[50] = "WRONG Password => data erased for security ;)\n";
         if (string_compare((char*)Buf, mdp, strlen(mdp))){
             CDC_Transmit_FS(boug, strlen(boug));
             pwFinded = true;
