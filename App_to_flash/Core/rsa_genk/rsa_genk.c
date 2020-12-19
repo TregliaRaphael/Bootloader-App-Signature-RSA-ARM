@@ -10,6 +10,18 @@ bool keyGenerated = false;
 UART_HandleTypeDef *huart;
 
 
+void blinkLed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, int nbrblink, int delayms)
+{
+  for (int i = 0; i < nbrblink; i++)
+  {
+    HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_SET);
+    HAL_Delay(delayms/2);
+    HAL_GPIO_WritePin(GPIOx, GPIO_Pin, GPIO_PIN_RESET);
+    HAL_Delay(delayms/2);
+  }
+}
+
+
 static char convertToHexa(uint32_t u) {
   if (u <= 9)
     return u + '0';
@@ -33,14 +45,14 @@ static void UART_RECEIVE(unsigned char* buffer, size_t buffer_len, char* instruc
       UART_SEND(instruction);
     } else {
       if (state == HAL_BUSY)
-        UART_SEND("errorBUSY\n");
+        __NOP();
       else if (state == HAL_TIMEOUT)
-        UART_SEND("errorTIMEOUT\n");
+        __NOP();
       else if (state == HAL_ERROR)
-        UART_SEND("errorERROR\n");
+        __NOP();
     }
   }
-  UART_SEND("FINISHED\n");
+  //UART_SEND("FINISHED\n");
 }
 
 
@@ -51,7 +63,9 @@ void mbedRsaInit(UART_HandleTypeDef *uart){
 }
 
 
+//one blue blink for this fct
 void genKey(void) {
+  blinkLed(LD2_GPIO_Port, LD2_Pin, 1, 300);
   const char *personalization = "dfajenFNXOmdfjacnI>ndfN";
   const mbedtls_md_info_t* md_info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
   int error = mbedtls_hmac_drbg_seed_buf(&cont,
@@ -59,30 +73,26 @@ void genKey(void) {
                                     (unsigned char *) personalization,
                                     strlen(personalization));
 
-  /*if (error != 0) {
-    if (error == MBEDTLS_ERR_MD_BAD_INPUT_DATA) {
-      UART_SEND("MD bad input data\n");
-    }
-    else if (error == MBEDTLS_ERR_MD_ALLOC_FAILED) {
-
-      UART_SEND("MD Alloc failed\n");
-    }
-    else {
-      UART_SEND("Err idk\n");
-    }
-
-  }*/
-  error = mbedtls_rsa_gen_key(&rsa_cont, mbedtls_hmac_drbg_random, &cont, 1024, 65537);
-  if (!error) {
+  if (error)
+  {
+    if (error == MBEDTLS_ERR_MD_BAD_INPUT_DATA)
+      __NOP();
+    else if (error == MBEDTLS_ERR_MD_ALLOC_FAILED)
+      __NOP();
+    blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
+    return;
+  }
+  if (!mbedtls_rsa_gen_key(&rsa_cont, mbedtls_hmac_drbg_random, &cont, 1024, 65537)){
     keyGenerated = true;
-  } 
-  /*else {
-    UART_SEND("rsa generation failed\n");
-  }*/
+    blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
+  }
+  else
+    blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
 }
 
-
+//two blue blink for this fct
 void sendPriv(void) {
+  blinkLed(LD2_GPIO_Port, LD2_Pin, 2, 300);
   unsigned char sha256[SHA256_SIZE] = "d03a7ba834457c81580617b90aac6f6505232f556952fcb7fabb3a740b1c2170";
   unsigned char signedSHA[500];
   int error;
@@ -93,15 +103,13 @@ void sendPriv(void) {
       MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256, SHA256_SIZE, sha256, signedSHA);
 
   if (error) {
-
     if (error == MBEDTLS_ERR_RSA_BAD_INPUT_DATA)
-      UART_SEND("error: signature failed input\n");
-    else
-      UART_SEND("error: signature failed\n");
-
+      __NOP();
+    blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
   } else {
     HAL_UART_Transmit (huart, signedSHA, sizeof(signedSHA) , 300);
     UART_SEND("\n");
+    blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
   }
 }
 
@@ -122,12 +130,14 @@ static void send_mpi_buffer_UART(mbedtls_mpi *mpi) {
 
   for (; buffer_index < n; buffer_index++)
     buffer[buffer_index++] = '\0';
-  volatile int len = strlen(buffer);
   UART_SEND(buffer);
 }
 
+//three blue blink for this fct
 void sendPub(void){
+  blinkLed(LD2_GPIO_Port, LD2_Pin, 2, 300);
   send_mpi_buffer_UART(&rsa_cont.N);
   send_mpi_buffer_UART(&rsa_cont.E);
   UART_SEND("\n");
+  blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
 }
