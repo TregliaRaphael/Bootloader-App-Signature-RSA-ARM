@@ -10,27 +10,42 @@ from serial import Serial, SerialException
 
 
 flash_start = "#$FLASH_START"
+send_sha = "1"
+init_pwd = "2"
 flash_end = "#$FLASH_FINISH"
 flash_erase = "#$ERASE_MEM"
 flash_abort =  "#$FLASH_ABORT"
 
 
 
-with open(sys.argv[1], 'rb') as binary:
-    
+with open(sys.argv[1], 'rb') as sha:
+    shaa = sha.read().decode('ascii')
     try:
-        s = Serial(port='/dev/ttyACM0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=0, rtscts=0)
+        s = Serial(port='/dev/ttyUSB0', baudrate=115200, bytesize=8, parity='N', stopbits=1, timeout=None, xonxoff=0, rtscts=0)
     except SerialException:
         print("Can't open serial")
         exit()
+    
+    s.write(send_sha.encode('ascii'))
+    s.readline() #consume OK from uC
+    sleep(0.2)
+    print("Send sha256 to uC")
+    s.write(shaa[:-1].encode('ascii'))
+    print(s.readline())
+    
+    sleep(0.5)
 
+    s.write(init_pwd.encode('ascii'))
+    s.readline() #consume OK from uC
+    print("Password init (10 caractères): ")
+    val = sys.stdin.readline()
+    while len(val[:-1]) != 10:
+        print("You miss, pwd need 10 caractères")
+        val = sys.stdin.readline()
+    s.write(val[:-1].encode('ascii'))
+    print(s.readline())
 
-    def signal_handler(sig,frame):
-        s.write(flash_abort.encode('ascii'))
-        print(s.readline().decode('ascii'))
-        sys.exit(0)
-    signal.signal(signal.SIGINT, signal_handler)
-
+    exit()
     print("Enter 1 to flash")
     print("Enter 2 to erase flash memory")
     print("Or enter password")
@@ -43,9 +58,9 @@ with open(sys.argv[1], 'rb') as binary:
             perm = s.readline()
             if perm == b'YE\n':
                 print("Flash Started")
-                while (byte := binary.read(4)):
+                while (byte := shaa.read(4)):
                     s.write(byte)
-                binary.seek(0)
+                shaa.seek(0)
                 print("Flash Ended, lets jump to the App")
                 s.write(flash_end.encode('ascii'))
                 exit()

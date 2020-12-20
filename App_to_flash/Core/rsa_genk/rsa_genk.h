@@ -45,6 +45,6 @@ void mbedRsaInit(UART_HandleTypeDef *uart);
 void genKey(void);
 void sendPriv(void);
 void sendPub(void);
-void message_handler(uint8_t *buff, uint32_t len);
+void message_handler(void/*uint8_t *buff, uint32_t len*/);
 
 #endif //MY_RSA_GENK_H

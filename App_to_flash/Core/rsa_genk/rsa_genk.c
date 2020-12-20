@@ -1,12 +1,19 @@
 #include "rsa_genk.h"
 
 #define SHA256_SIZE 64
-#define PWD_SIZE 50
+#define PWD_SIZE 10
+#define BUFF_SIZE 100
+
 
 unsigned char passwd[PWD_SIZE];
+uint8_t buff[BUFF_SIZE];
+unsigned char sha256[SHA256_SIZE];
+
 mbedtls_hmac_drbg_context cont;
 mbedtls_rsa_context rsa_cont;
+
 bool keyGenerated = false;
+//unsigned char sha256[SHA256_SIZE] = "d03a7ba834457c81580617b90aac6f6505232f556952fcb7fabb3a740b1c2170";
 
 UART_HandleTypeDef *huart;
 
@@ -38,6 +45,21 @@ static void UART_SEND(char *str) {
       strlen(str), 300);
 }
 
+static void UART_RECEIVE(uint8_t* buffer, size_t buffer_len, uint8_t *mess) {
+  while (1)
+  {
+    if (HAL_UART_Receive(huart, buffer, buffer_len, 100) == HAL_OK)
+    {
+      if (mess != NULL)
+        UART_SEND(mess);
+      else
+        UART_SEND("OK\n");
+      blinkLed(LD2_GPIO_Port, LD2_Pin, 1, 50);
+      return ;
+    }
+
+  }
+}
 
 void mbedRsaInit(UART_HandleTypeDef *uart){
   mbedtls_hmac_drbg_init(&cont);
@@ -77,10 +99,9 @@ void genKey(void) {
 //two blue blink for this fct
 void sendPriv(void) {
   blinkLed(LD2_GPIO_Port, LD2_Pin, 2, 300);
-  unsigned char sha256[SHA256_SIZE] = "d03a7ba834457c81580617b90aac6f6505232f556952fcb7fabb3a740b1c2170";
   unsigned char signedSHA[500];
   int error;
-
+  
   error = mbedtls_rsa_rsassa_pkcs1_v15_sign(&rsa_cont, mbedtls_hmac_drbg_random, &cont,
       MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256, SHA256_SIZE, sha256, signedSHA);
 
@@ -124,6 +145,19 @@ void sendPub(void){
   blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
 }
 
-void message_handler(uint8_t *buff, uint32_t len){
+void message_handler(void){
+  UART_RECEIVE(&buff, 1, NULL);
+  if (buff[0] == '1') //send sha
+  {
+    UART_RECEIVE(&sha256, SHA256_SIZE, "Sha stored\n");
+    blinkLed(LD1_GPIO_Port, LD1_Pin, 1, 50);
+    pStatus = nopwd;
+  }
+  else if (buff[0] == '2') //init password
+  {
+    UART_RECEIVE(&passwd, PWD_SIZE, "Password init successfull\n");
+    blinkLed(LD1_GPIO_Port, LD1_Pin, 2, 50);
+    pStatus = ready;
+  }
   
 }

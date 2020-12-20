@@ -23,7 +23,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-//#define MBEDTLS_MEMORY_VERIFY_ALLOC (1 << 0)
 #include "rsa_genk.h"
 /* USER CODE END Includes */
 
@@ -44,7 +43,6 @@
 /* Private variables ---------------------------------------------------------*/
 
 UART_HandleTypeDef huart6;
-DMA_HandleTypeDef hdma_usart6_rx;
 
 /* USER CODE BEGIN PV */
 //To fix hal_delay bad def
@@ -64,23 +62,11 @@ void HAL_Delay(uint32_t milliseconds) {
 
 }
 
-#define BUFF_SZ 50
-uint8_t buff[BUFF_SZ];
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-{
-  if (huart->Instance == USART6)
-  {
-    message_handler(buff, BUFF_SZ);
-    HAL_UART_Receive_DMA(huart, buff, BUFF_SZ);
-  }
-}
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
 static void MX_USART6_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -88,7 +74,6 @@ static void MX_USART6_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
 /* USER CODE END 0 */
 
 /**
@@ -118,26 +103,26 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_USART6_UART_Init();
   MX_MBEDTLS_Init();
+  MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  HAL_UART_Receive_DMA(&huart6, buff, BUFF_SZ);
   genKey();
-  sendPriv();
-  sendPub();
+  /*sendPriv();
+  sendPub();*/
+    //message_handler();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-  HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
+    message_handler();
+  /*HAL_GPIO_TogglePin(LD3_GPIO_Port, LD3_Pin);
   HAL_Delay(200);
   HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
   HAL_Delay(200);
   HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-  HAL_Delay(200);
+  HAL_Delay(200);*/
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -236,22 +221,6 @@ static void MX_USART6_UART_Init(void)
   /* USER CODE BEGIN USART6_Init 2 */
 
   /* USER CODE END USART6_Init 2 */
-
-}
-
-/**
-  * Enable DMA controller clock
-  */
-static void MX_DMA_Init(void)
-{
-
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA2_CLK_ENABLE();
-
-  /* DMA interrupt init */
-  /* DMA2_Stream1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
 
 }
 
