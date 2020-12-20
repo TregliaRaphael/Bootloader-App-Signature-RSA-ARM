@@ -106,10 +106,6 @@ int main(void)
   MX_MBEDTLS_Init();
   MX_USART6_UART_Init();
   /* USER CODE BEGIN 2 */
-  genKey();
-  /*sendPriv();
-  sendPub();*/
-    //message_handler();
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -10,8 +10,8 @@ from serial import Serial, SerialException
 
 send_sha = "1"
 init_pwd = "2"
-ask_pubk = "3"
-ask_priv = "4"
+askpubk = "3"
+askpriv = "4"
 
 def completePwd(pwd):
     lenght = len(pwd)
@@ -46,6 +46,7 @@ def initPwd(s):
         val = sys.stdin.readline()
     s.write(val[:-1].encode('ascii'))
     print(s.readline().decode('ascii'))
+    print(s.readline().decode('ascii'))
 
 def askPwd(s, key):
     s.write(key.encode('ascii'))
@@ -55,21 +56,22 @@ def askPwd(s, key):
     val = completePwd(sys.stdin.readline()[:-1])
     s.write(val.encode('ascii'))
     s.readline() #consume OK from uC
-    return s.readline().decode('ascii')[:-1]
+    return s.readline()[:-1]
 
 def askPubKey(s):
-    if askPwd(s, ask_pubk) != "PWD OK":
+    if askPwd(s, askpubk) != b'PWD OK':
       print("Wrong password, public key aborted")
+      s.readline() #to consume error in case
       return
     print("Password Good")
-    print(s.readline().decode('utf-8'))
+    print(s.readline())
 
 def askPrivKey(s):
-    if askPwd(s, ask_priv) != "PWD OK":
+    if askPwd(s, askpriv) != b'PWD OK':
       print("Wrong password, private signed key aborted")
+      s.readline() #to consume error in case
       return
     print("Password Good")
-
     print(s.readline())
 
 

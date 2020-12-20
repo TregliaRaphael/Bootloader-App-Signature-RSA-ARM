@@ -12,8 +12,8 @@ unsigned char sha256[SHA256_SIZE];
 mbedtls_hmac_drbg_context cont;
 mbedtls_rsa_context rsa_cont;
 
+char *personalization = "azefjsigphazejhfiupazea";
 bool keyGenerated = false;
-//unsigned char sha256[SHA256_SIZE] = "d03a7ba834457c81580617b90aac6f6505232f556952fcb7fabb3a740b1c2170";
 
 UART_HandleTypeDef *huart;
 
@@ -39,6 +39,9 @@ static char convertToHexa(uint32_t u) {
   }
 }
 
+static void meltPwdAndKey(){
+  
+}
 
 static void UART_SEND(char *str) {
   HAL_UART_Transmit (huart, (unsigned char *)str,
@@ -72,7 +75,6 @@ void mbedRsaInit(UART_HandleTypeDef *uart){
 //one blue blink for this fct
 void genKey(void) {
   blinkLed(LD2_GPIO_Port, LD2_Pin, 1, 300);
-  const char *personalization = "dfajenFNXOmdfjacnI>ndfN";
   const mbedtls_md_info_t* md_info = mbedtls_md_info_from_type(MBEDTLS_MD_SHA256);
   int error = mbedtls_hmac_drbg_seed_buf(&cont,
                                     md_info,
@@ -108,9 +110,9 @@ void sendPriv(void) {
   if (error) {
     if (error == MBEDTLS_ERR_RSA_BAD_INPUT_DATA)
       __NOP();
+    UART_SEND("SIGNED CREATE FAIL\n");
     blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
   } else {
-    //HAL_UART_Transmit (huart, signedSHA, sizeof(signedSHA) , 300);
     UART_SEND(signedSHA);
     UART_SEND("\n");
     blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
@@ -174,6 +176,9 @@ void message_handler(void){
     case '2': //PWD INIT
       UART_RECEIVE(&passwd, PWD_SIZE, (uint8_t *)"Password init successfull\n");
       blinkLed(LD1_GPIO_Port, LD1_Pin, 2, 50);
+      meltPwdAndKey();
+      genKey();
+      UART_SEND("Melting KeyGen successfull\n");
       pStatus = ready;
       break;
 
@@ -188,6 +193,7 @@ void message_handler(void){
       else
       {
           UART_SEND("PWD KO\n");
+          UART_SEND("PWD KO\n");
           blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
       }
       break;
@@ -197,11 +203,13 @@ void message_handler(void){
       if (string_compare((char *)buff, (char *)passwd, PWD_SIZE))
       {
           UART_SEND("PWD OK\n");
-          sendPriv();
+          //sendPriv();
+          UART_SEND("PWD OK\n");
           blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
       }
       else
       {
+          UART_SEND("PWD KO\n");
           UART_SEND("PWD KO\n");
           blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
       }
