@@ -51,7 +51,7 @@ static void UART_RECEIVE(uint8_t* buffer, size_t buffer_len, uint8_t *mess) {
     if (HAL_UART_Receive(huart, buffer, buffer_len, 100) == HAL_OK)
     {
       if (mess != NULL)
-        UART_SEND(mess);
+        UART_SEND((char *)mess);
       else
         UART_SEND("OK\n");
       blinkLed(LD2_GPIO_Port, LD2_Pin, 1, 50);
@@ -110,7 +110,8 @@ void sendPriv(void) {
       __NOP();
     blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
   } else {
-    HAL_UART_Transmit (huart, signedSHA, sizeof(signedSHA) , 300);
+    //HAL_UART_Transmit (huart, signedSHA, sizeof(signedSHA) , 300);
+    UART_SEND(signedSHA);
     UART_SEND("\n");
     blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
   }
@@ -145,19 +146,68 @@ void sendPub(void){
   blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
 }
 
+static uint8_t string_compare(char array1[], char array2[], uint16_t length)
+{
+         uint8_t comVAR=0, i;
+         for(i=0;i<length;i++)
+                {
+                          if(array1[i]==array2[i])
+                                  comVAR++;
+                          else comVAR=0;
+                }
+         if (comVAR==length)
+                        return 1;
+         else   return 0;
+}
+
+
 void message_handler(void){
   UART_RECEIVE(&buff, 1, NULL);
-  if (buff[0] == '1') //send sha
+  switch(buff[0])
   {
-    UART_RECEIVE(&sha256, SHA256_SIZE, "Sha stored\n");
-    blinkLed(LD1_GPIO_Port, LD1_Pin, 1, 50);
-    pStatus = nopwd;
+    case '1': //SHA INIT
+      UART_RECEIVE(&sha256, SHA256_SIZE, (uint8_t *)"Sha stored\n");
+      blinkLed(LD1_GPIO_Port, LD1_Pin, 1, 50);
+      pStatus = nopwd;
+      break;
+
+    case '2': //PWD INIT
+      UART_RECEIVE(&passwd, PWD_SIZE, (uint8_t *)"Password init successfull\n");
+      blinkLed(LD1_GPIO_Port, LD1_Pin, 2, 50);
+      pStatus = ready;
+      break;
+
+    case '3': //ASK PUBKEY
+      UART_RECEIVE(&buff, PWD_SIZE, NULL);
+      if (string_compare((char *)buff, (char *)passwd, PWD_SIZE))
+      {
+          UART_SEND("PWD OK\n");
+          sendPub();
+          blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
+      }
+      else
+      {
+          UART_SEND("PWD KO\n");
+          blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
+      }
+      break;
+
+    case '4': //ASK PRIVKEY
+      UART_RECEIVE(&buff, PWD_SIZE, NULL);
+      if (string_compare((char *)buff, (char *)passwd, PWD_SIZE))
+      {
+          UART_SEND("PWD OK\n");
+          sendPriv();
+          blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
+      }
+      else
+      {
+          UART_SEND("PWD KO\n");
+          blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
+      }
+      break;
+
+    default:
+      break;
   }
-  else if (buff[0] == '2') //init password
-  {
-    UART_RECEIVE(&passwd, PWD_SIZE, "Password init successfull\n");
-    blinkLed(LD1_GPIO_Port, LD1_Pin, 2, 50);
-    pStatus = ready;
-  }
-  
 }

@@ -8,14 +8,69 @@ from time import sleep
 
 from serial import Serial, SerialException
 
-
-flash_start = "#$FLASH_START"
 send_sha = "1"
 init_pwd = "2"
-flash_end = "#$FLASH_FINISH"
-flash_erase = "#$ERASE_MEM"
-flash_abort =  "#$FLASH_ABORT"
+ask_pubk = "3"
+ask_priv = "4"
 
+def completePwd(pwd):
+    lenght = len(pwd)
+    if lenght == 10:
+        return pwd
+    elif lenght > 10:
+        return pwd[:-(lenght - 10)]
+    else:
+        s = pwd
+        cpt = 10 - lenght
+        while cpt != 0:
+            s += '\0'
+            cpt -= 1
+        return s
+        
+
+def sendSha256(s):
+    s.write(send_sha.encode('ascii'))
+    s.readline() #consume OK from uC
+    sleep(0.2)
+    print("Send sha256 to uC")
+    s.write(shaa[:-1].encode('ascii'))
+    print(s.readline().decode('ascii'))
+
+def initPwd(s):
+    s.write(init_pwd.encode('ascii'))
+    s.readline() #consume OK from uC
+    print("Password init (10 caractères): ")
+    val = sys.stdin.readline()
+    while len(val[:-1]) != 10:
+        print("You miss, pwd need 10 caractères")
+        val = sys.stdin.readline()
+    s.write(val[:-1].encode('ascii'))
+    print(s.readline().decode('ascii'))
+
+def askPwd(s, key):
+    s.write(key.encode('ascii'))
+    s.readline() #consume OK from uC
+
+    print("Enter password: ")
+    val = completePwd(sys.stdin.readline()[:-1])
+    s.write(val.encode('ascii'))
+    s.readline() #consume OK from uC
+    return s.readline().decode('ascii')[:-1]
+
+def askPubKey(s):
+    if askPwd(s, ask_pubk) != "PWD OK":
+      print("Wrong password, public key aborted")
+      return
+    print("Password Good")
+    print(s.readline().decode('utf-8'))
+
+def askPrivKey(s):
+    if askPwd(s, ask_priv) != "PWD OK":
+      print("Wrong password, private signed key aborted")
+      return
+    print("Password Good")
+
+    print(s.readline())
 
 
 with open(sys.argv[1], 'rb') as sha:
@@ -26,52 +81,19 @@ with open(sys.argv[1], 'rb') as sha:
         print("Can't open serial")
         exit()
     
-    s.write(send_sha.encode('ascii'))
-    s.readline() #consume OK from uC
-    sleep(0.2)
-    print("Send sha256 to uC")
-    s.write(shaa[:-1].encode('ascii'))
-    print(s.readline())
-    
+    sendSha256(s)
     sleep(0.5)
-
-    s.write(init_pwd.encode('ascii'))
-    s.readline() #consume OK from uC
-    print("Password init (10 caractères): ")
-    val = sys.stdin.readline()
-    while len(val[:-1]) != 10:
-        print("You miss, pwd need 10 caractères")
-        val = sys.stdin.readline()
-    s.write(val[:-1].encode('ascii'))
-    print(s.readline())
-
-    exit()
-    print("Enter 1 to flash")
-    print("Enter 2 to erase flash memory")
-    print("Or enter password")
+    initPwd(s)
+    
+    print("Enter 1 to ask public key")
+    print("Enter 2 to ask signed private key")
     print("Enter q to exit")
 
     while True:
         val = sys.stdin.readline()
-        if val == '1\n':
-            s.write(flash_start.encode('ascii'))
-            perm = s.readline()
-            if perm == b'YE\n':
-                print("Flash Started")
-                while (byte := shaa.read(4)):
-                    s.write(byte)
-                shaa.seek(0)
-                print("Flash Ended, lets jump to the App")
-                s.write(flash_end.encode('ascii'))
-                exit()
-            else:
-                print("Flash rejected, need to enter a (valid) password")
-        elif val == '2\n':
-            s.write(flash_erase.encode('ascii'))
-            sleep(0.2)
+        if val == '1\n': #PUBKEY
+            askPubKey(s)
+        elif val == '2\n': #PRIVKEY
+            askPrivKey(s)
         elif val == 'q\n':
             exit()
-        else:
-            pwd = val
-            s.write(pwd.encode('ascii'))
-            print(s.readline().decode('ascii'))
