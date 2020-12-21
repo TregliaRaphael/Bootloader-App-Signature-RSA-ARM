@@ -13,7 +13,6 @@ init_pwd = "2"
 askpubk = "3"
 askpriv = "4"
 
-#reservedStrings = [  b'\r', b'\n', b'PWD OK\n', b'PWD KO\n', b'OK\n', b'SIGNED CREATE FAIL\n', b'Sha stored\n', b'Password init successfull\n', b'Melting KeyGen successfull\n']
 reservedStrings = [ b'\r', b'\n']
 
 def completePwd(pwd):
@@ -63,6 +62,7 @@ def initPwd(s):
         val = sys.stdin.readline()
     s.write(val[:-1].encode('ascii'))
     print(s.readline().decode('ascii'))
+    print("Melting KeyGen processing")
     print(s.readline().decode('ascii'))
 
 def askPwd(s, key):
@@ -97,7 +97,7 @@ def askPrivKey(s):
     while sign[-5:] != b' end\n' and sign[-1:] in reservedStrings :
         sign +=  s.readline()
     print("Signature: " + str(sign[:-5]))
-
+    #print(s.readline())
 
 
 with open(sys.argv[1], 'rb') as sha:

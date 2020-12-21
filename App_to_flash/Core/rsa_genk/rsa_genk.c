@@ -7,7 +7,7 @@
 
 unsigned char passwd[PWD_SIZE];
 uint8_t buff[BUFF_SIZE];
-unsigned char sha256[SHA256_SIZE];
+unsigned char shasha256[SHA256_SIZE];
 
 mbedtls_hmac_drbg_context cont;
 mbedtls_rsa_context rsa_cont;
@@ -105,15 +105,21 @@ void sendPriv(void) {
   int error;
   
   error = mbedtls_rsa_rsassa_pkcs1_v15_sign(&rsa_cont, mbedtls_hmac_drbg_random, &cont,
-      MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256, SHA256_SIZE, sha256, signedSHA);
-
+      MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256, SHA256_SIZE, shasha256, signedSHA);
+  
   if (error) {
     if (error == MBEDTLS_ERR_RSA_BAD_INPUT_DATA)
       __NOP();
     UART_SEND("SIGNED CREATE FAIL\n");
+    UART_SEND(" end\n");
     blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
   } else {
-    UART_SEND(signedSHA);
+    unsigned char b64tosend[500];
+    int lenWritten;
+    if(!mbedtls_base64_encode(b64tosend, 500, &lenWritten, signedSHA, 256))
+    	UART_SEND(b64tosend);
+    else
+    	UART_SEND("B64 ENCODE SHA ERR");
     UART_SEND(" end\n");
     blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
   }
@@ -168,7 +174,7 @@ void message_handler(void){
   switch(buff[0])
   {
     case '1': //SHA INIT
-      UART_RECEIVE(&sha256, SHA256_SIZE, (uint8_t *)"Sha stored\n");
+      UART_RECEIVE(&shasha256, SHA256_SIZE, (uint8_t *)"Sha stored\n");
       blinkLed(LD1_GPIO_Port, LD1_Pin, 1, 50);
       pStatus = nopwd;
       break;
