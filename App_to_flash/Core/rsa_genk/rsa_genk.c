@@ -114,7 +114,7 @@ void sendPriv(void) {
     blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
   } else {
     UART_SEND(signedSHA);
-    UART_SEND("\n");
+    UART_SEND(" end\n");
     blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
   }
 }
@@ -144,7 +144,7 @@ void sendPub(void){
   blinkLed(LD2_GPIO_Port, LD2_Pin, 3, 300);
   send_mpi_buffer_UART(&rsa_cont.N);
   send_mpi_buffer_UART(&rsa_cont.E);
-  UART_SEND("\n");
+  UART_SEND(" end\n");
   blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
 }
 
@@ -203,8 +203,7 @@ void message_handler(void){
       if (string_compare((char *)buff, (char *)passwd, PWD_SIZE))
       {
           UART_SEND("PWD OK\n");
-          //sendPriv();
-          UART_SEND("PWD OK\n");
+          sendPriv();
           blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
       }
       else

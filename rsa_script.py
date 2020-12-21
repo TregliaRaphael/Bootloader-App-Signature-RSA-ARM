@@ -13,6 +13,9 @@ init_pwd = "2"
 askpubk = "3"
 askpriv = "4"
 
+#reservedStrings = [  b'\r', b'\n', b'PWD OK\n', b'PWD KO\n', b'OK\n', b'SIGNED CREATE FAIL\n', b'Sha stored\n', b'Password init successfull\n', b'Melting KeyGen successfull\n']
+reservedStrings = [ b'\r', b'\n']
+
 def completePwd(pwd):
     lenght = len(pwd)
     if lenght == 10:
@@ -26,7 +29,21 @@ def completePwd(pwd):
             s += '\0'
             cpt -= 1
         return s
-        
+
+
+def myreadline(s):
+    eol = b'\r'
+    leneol = len(eol)
+    line = bytearray()
+    while True:
+        c = s.read(1)
+        if c:
+            line += c
+            if line[-leneol:] == eol:
+                break
+        else:
+            break
+    return bytes(line)  
 
 def sendSha256(s):
     s.write(send_sha.encode('ascii'))
@@ -64,7 +81,11 @@ def askPubKey(s):
       s.readline() #to consume error in case
       return
     print("Password Good")
-    print(s.readline())
+    sign = s.readline()
+    while sign[-5:] != b' end\n' and sign[-1:] in reservedStrings :
+        sign +=s.readline()
+    print("PubKey: " + str(sign[:-5]))
+
 
 def askPrivKey(s):
     if askPwd(s, askpriv) != b'PWD OK':
@@ -72,7 +93,11 @@ def askPrivKey(s):
       s.readline() #to consume error in case
       return
     print("Password Good")
-    print(s.readline())
+    sign = s.readline()
+    while sign[-5:] != b' end\n' and sign[-1:] in reservedStrings :
+        sign +=  s.readline()
+    print("Signature: " + str(sign[:-5]))
+
 
 
 with open(sys.argv[1], 'rb') as sha:
