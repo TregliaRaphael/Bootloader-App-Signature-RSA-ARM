@@ -3,15 +3,15 @@
 #define SHA256_SIZE 64
 #define PWD_SIZE 10
 #define BUFF_SIZE 100
-
+#define BSHALEN 300
 
 unsigned char passwd[PWD_SIZE];
 uint8_t buff[BUFF_SIZE];
 unsigned char shasha256[SHA256_SIZE];
+unsigned char bsha[BSHALEN];
 
 mbedtls_hmac_drbg_context cont;
 mbedtls_rsa_context rsa_cont;
-
 char *personalization = "azefjsigphazejhfiupazea";
 bool keyGenerated = false;
 
@@ -99,13 +99,13 @@ void genKey(void) {
 }
 
 //two blue blink for this fct
-void sendPriv(void) {
+void sendSign(void) {
   blinkLed(LD2_GPIO_Port, LD2_Pin, 2, 300);
   unsigned char signedSHA[500];
   int error;
   
   error = mbedtls_rsa_rsassa_pkcs1_v15_sign(&rsa_cont, mbedtls_hmac_drbg_random, &cont,
-      MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256, SHA256_SIZE, shasha256, signedSHA);
+      MBEDTLS_RSA_PRIVATE, MBEDTLS_MD_SHA256, BSHALEN, bsha, signedSHA);
   
   if (error) {
     if (error == MBEDTLS_ERR_RSA_BAD_INPUT_DATA)
@@ -116,7 +116,7 @@ void sendPriv(void) {
   } else {
     unsigned char b64tosend[500];
     int lenWritten;
-    if(!mbedtls_base64_encode(b64tosend, 500, &lenWritten, signedSHA, 256))
+    if(!mbedtls_base64_encode(b64tosend, 500, &lenWritten, signedSHA, 32))
     	UART_SEND(b64tosend);
     else
     	UART_SEND("B64 ENCODE SHA ERR");
@@ -168,27 +168,53 @@ static uint8_t string_compare(char array1[], char array2[], uint16_t length)
          else   return 0;
 }
 
+int checkStatus(PStatus stat, char *fail, int nbr_send){
+  if (pStatus != stat){
+    for (int i = 0; i < nbr_send; i++)
+      UART_SEND(fail);
+    blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
+    return 1;
+  }
+  return 0;
+}
 
 void message_handler(void){
   UART_RECEIVE(&buff, 1, NULL);
   switch(buff[0])
   {
     case '1': //SHA INIT
+      
       UART_RECEIVE(&shasha256, SHA256_SIZE, (uint8_t *)"Sha stored\n");
-      blinkLed(LD1_GPIO_Port, LD1_Pin, 1, 50);
-      pStatus = nopwd;
+      if (checkStatus(nosha, "Sha already init\n",1))
+        return;
+      int wlen;
+      if(mbedtls_base64_decode(bsha, BSHALEN, &wlen, shasha256, 64)){
+        UART_SEND("Sha to byte fail => sha size need to be 64 characters\n");
+        blinkLed(LD3_GPIO_Port, LD3_Pin, 1, 50);
+      }
+      else{
+        UART_SEND("Sha to byte Success\n");
+        blinkLed(LD1_GPIO_Port, LD1_Pin, 1, 50);
+        pStatus = nopwd;
+      }
       break;
 
     case '2': //PWD INIT
+      if (checkStatus(nopwd, "KOO\n",1))
+        return;
+      UART_SEND("OOK\n");
       UART_RECEIVE(&passwd, PWD_SIZE, (uint8_t *)"Password init successfull\n");
       blinkLed(LD1_GPIO_Port, LD1_Pin, 2, 50);
       meltPwdAndKey();
       genKey();
-      UART_SEND("Melting KeyGen successfull\n");
+      UART_SEND("RSA and Melting KeyGen successfull\n");
       pStatus = ready;
       break;
 
     case '3': //ASK PUBKEY
+      if (checkStatus(ready, "Can't ask pubkey\n",3))
+        return;
+
       UART_RECEIVE(&buff, PWD_SIZE, NULL);
       if (string_compare((char *)buff, (char *)passwd, PWD_SIZE))
       {
@@ -205,17 +231,20 @@ void message_handler(void){
       break;
 
     case '4': //ASK PRIVKEY
+      if (checkStatus(ready, "Can't ask signedKey end\n",3))
+        return;
+
       UART_RECEIVE(&buff, PWD_SIZE, NULL);
       if (string_compare((char *)buff, (char *)passwd, PWD_SIZE))
       {
           UART_SEND("PWD OK\n");
-          sendPriv();
+          sendSign();
           blinkLed(LD1_GPIO_Port, LD1_Pin, 3, 50);
       }
       else
       {
           UART_SEND("PWD KO\n");
-          UART_SEND("PWD KO\n");
+          UART_SEND("PWD KO end\n");
           blinkLed(LD3_GPIO_Port, LD3_Pin, 3, 50);
       }
       break;

@@ -46,23 +46,29 @@ def myreadline(s):
 
 def sendSha256(s):
     s.write(send_sha.encode('ascii'))
-    s.readline() #consume OK from uC
     sleep(0.2)
+    s.readline() #consume OK from uC
     print("Send sha256 to uC")
     s.write(shaa[:-1].encode('ascii'))
+    print(s.readline().decode('ascii'))
     print(s.readline().decode('ascii'))
 
 def initPwd(s):
     s.write(init_pwd.encode('ascii'))
     s.readline() #consume OK from uC
+    val = s.readline() #consume OK from uC
+    if val == b'KOO\n':
+        print("Password already init")
+        return
     print("Password init (10 caractères): ")
     val = sys.stdin.readline()
     while len(val[:-1]) != 10:
         print("You miss, pwd need 10 caractères")
         val = sys.stdin.readline()
     s.write(val[:-1].encode('ascii'))
+    
     print(s.readline().decode('ascii'))
-    print("Melting KeyGen processing")
+    print("RSA_Key generating and Melting KeyGen processing...")
     print(s.readline().decode('ascii'))
 
 def askPwd(s, key):
@@ -97,7 +103,6 @@ def askPrivKey(s):
     while sign[-5:] != b' end\n' and sign[-1:] in reservedStrings :
         sign +=  s.readline()
     print("Signature: " + str(sign[:-5]))
-    #print(s.readline())
 
 
 with open(sys.argv[1], 'rb') as sha:

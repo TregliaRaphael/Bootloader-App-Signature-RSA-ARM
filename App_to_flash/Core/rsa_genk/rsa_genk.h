@@ -43,7 +43,7 @@ void blinkLed(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, int nbrblink, int delayms)
 
 void mbedRsaInit(UART_HandleTypeDef *uart);
 void genKey(void);
-void sendPriv(void);
+void sendSign(void);
 void sendPub(void);
 void message_handler(void/*uint8_t *buff, uint32_t len*/);
 
