@@ -1,8 +1,5 @@
 # Signature-RSA-ARM
 
-### Faire un bootloader:
-https://github.com/viktorvano/STM32-Bootloader
-
 ### Ecrire l'app PC qui envoie discute avec le bootloader pour flash
 ##### scripte python qui:
   - lance le flash (erase + start flash)
