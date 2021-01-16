@@ -18,4 +18,4 @@
   uart PC6 TX => RX COMPUTER
        PC7 RX => TX COMPUTER
        
-       USB bootloader
+  USB bootloader
