@@ -13,3 +13,9 @@
   - demande une init de mdp
   - recup pubkey contre un mdp
   - recup privkey signed avec le sha envoyé au debut contre un mdp
+
+### Wiring
+  uart PC6 TX => RX COMPUTER
+       PC7 RX => TX COMPUTER
+       
+       USB bootloader
